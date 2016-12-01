@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical">
+
+    <include android:id="@+id/overlay_cancel_transaction" layout="@layout/overlay_cancel_transaction"  />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/lightBlue">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/mc_logo"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:text="eZCash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtSP"
+            android:textColor="@color/white"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="16dp"
+            />
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/imgSP"
+            android:layout_marginTop="20dp"
+            android:scaleType="fitXY" />
+
+        <TextView
+            android:text="Hi Shan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtMessage"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="20dp"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="16dp"
+            />
+    </LinearLayout>
+
+    <include android:id="@+id/authSwipe" layout="@layout/overlay_swipe" android:visibility="gone" />
+    <include android:id="@+id/authPin" layout="@layout/overlay_pin" android:visibility="gone" />
+    <include android:id="@+id/authFingerprint" layout="@layout/overlay_fingerprint" android:visibility="gone" />
+
+</LinearLayout>

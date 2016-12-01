@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="50dp"
+    android:background="@color/black"
+    android:orientation="horizontal">
+    <TextView
+        android:text="Please cancel the transaction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView"
+        android:textColor="@color/white"
+        android:paddingLeft="20dp"
+        android:layout_weight="1"
+        android:fontFamily="sans-serif-condensed"
+        android:textSize="16dp"
+        />
+
+    <Button
+        android:text="Cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnCancel"
+        android:layout_weight="3"
+        android:onClick="onClickCancelTransaction"
+        android:background="@color/white"
+        android:fontFamily="sans-serif-condensed"
+        android:textSize="16dp"
+        android:layout_margin="5dp"
+        android:textAllCaps="false"/>
+
+</LinearLayout>
+

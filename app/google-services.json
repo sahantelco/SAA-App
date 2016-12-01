@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1025145222622",
+    "firebase_url": "https://androidauthenticator-66020.firebaseio.com",
+    "project_id": "androidauthenticator-66020",
+    "storage_bucket": "androidauthenticator-66020.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1025145222622:android:fea0f03cb1a971a9",
+        "android_client_info": {
+          "package_name": "org.wso2telco.authenticator.client"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1025145222622-pomj6jq432657emq8kafltet5coolu5n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2jQbRjM0sbbIwNv45SMa3bhGkyuXPOLI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
