@@ -26,6 +26,7 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activity.ActivityMain" />
         <activity android:name=".activity.ActivitySplash" />
         <activity android:name=".activity.ActivityFingerprint" />
         <activity android:name=".activity.ActivityPin" />

@@ -18,6 +18,7 @@
 package org.wso2telco.authenticator.client.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -46,15 +47,17 @@ import static org.wso2telco.authenticator.client.util.MyFirebaseMessagingService
 
 public class ActivityAuthorize extends FragmentActivity {
 
-    ImageView imgSP ;
-    TextView tvMessage ;
-    TextView tvSP ;
-    String messageId ;
-    int levelOfAssurance = LOA.Level2 ;
+    ImageView imgSP;
+    TextView tvMessage;
+    TextView tvSP;
+    String messageId;
+    int levelOfAssurance = LOA.Level2;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = getApplicationContext();
         setContentView(R.layout.activity_authorize);
         MyDevice.setTaskBarColored(this);
         init();
@@ -71,15 +74,15 @@ public class ActivityAuthorize extends FragmentActivity {
                 tvSP = (TextView) findViewById(R.id.txtSP);
                 tvMessage.setText(extras.getString(INTENT_MSG));
                 tvSP.setText(extras.getString(INTENT_APP_NAME));
-                String strSP_URL = extras.getString(INTENT_SP_URL) ;
+                String strSP_URL = extras.getString(INTENT_SP_URL);
                 messageId = extras.getString(INTENT_MSG_ID);
                 levelOfAssurance = Integer.parseInt(extras.getString(INTENT_LOA));
                 if (URLUtil.isValidUrl(strSP_URL)) {
                     showImage(strSP_URL);
                 }
-                showAuthenticator(levelOfAssurance) ;
+                showAuthenticator(levelOfAssurance,messageId);
             } catch (Exception e) {
-                finish() ;
+                finish();
             }
         }
     }
@@ -104,22 +107,34 @@ public class ActivityAuthorize extends FragmentActivity {
 
     public void onClickCancelTransaction(View v) {
         setAuthenticationStatus(ServerAPI.Athentication.FAILED);
+        ServerAPI.getInstance(context).updateAdapter("success", messageId, new ServerAPI.ResponseListener() {
+            @Override
+            public void onSuccess() throws JSONException {
+                Log.e("onSuccess", "Fingerprint Authentication");
+            }
+
+            @Override
+            public void onFailure(String reason) {
+                Log.e("onFAilure", "Fingerprint Authentication");
+
+            }
+        });
     }
 
-    public void showAuthenticator(int acr) {
+    public void showAuthenticator(int acr, String sessionDataKey) {
         switch (acr) {
-            case LOA.Level2 :
-                showSwipeAuthenticator();
+            case LOA.Level2:
+                showSwipeAuthenticator(sessionDataKey);
                 break;
             case LOA.Level3:
                 String AUTH_MODE = MySettings.getTransAuthMode(this);
                 if (AUTH_MODE.equals(MySettings.Authentication.FINGER_PRINT)) {
                     if (MyDevice.fingerprintStatus(this) == MyDevice.FingerprintStatus.HARDWARE_SUPPORTED_AND_SET)
-                        showFingerprintAuthenticator();
+                        showFingerprintAuthenticator(sessionDataKey);
                     else
-                        showPinAuthenticator();
+                        showPinAuthenticator(sessionDataKey);
                 } else
-                    showPinAuthenticator();
+                    showPinAuthenticator(sessionDataKey);
                 break;
         }
     }
@@ -133,7 +148,7 @@ public class ActivityAuthorize extends FragmentActivity {
         vwAuthPin.setVisibility(View.GONE);
     }
 
-    public void showSwipeAuthenticator() {
+    public void showSwipeAuthenticator(final String sessionDataKey) {
         hideAllAuthenticators();
 
         View vwAuthSwipe = findViewById(R.id.authSwipe);
@@ -143,16 +158,42 @@ public class ActivityAuthorize extends FragmentActivity {
         btnSwipe.setOnTouchListener(new OnSwipeTouchListener(ActivityAuthorize.this) {
             public void onSwipeRight() {
                 setAuthenticationStatus(ServerAPI.Athentication.SUCCESS);
+                ServerAPI.getInstance(context).updateAdapter("success", sessionDataKey, new ServerAPI.ResponseListener() {
+                    @Override
+                    public void onSuccess() throws JSONException {
+                        Log.e("onSuccess", "oSwipeRight");
+                    }
+
+                    @Override
+                    public void onFailure(String reason) {
+                        Log.e("onFAilure", "onSwipeRight");
+
+                    }
+                });
                 finish();
             }
+
             public void onSwipeLeft() {
                 setAuthenticationStatus(ServerAPI.Athentication.SUCCESS);
+                ServerAPI.getInstance(context).updateAdapter("success", sessionDataKey, new ServerAPI.ResponseListener() {
+                    @Override
+                    public void onSuccess() throws JSONException {
+                        Log.e("onSuccess", "oSwipeLeft");
+                    }
+
+                    @Override
+                    public void onFailure(String reason) {
+                        Log.e("onFAilure", "onSwipeLeft");
+
+                    }
+                });
                 finish();
             }
         });
     }
 
-    public void showPinAuthenticator() {
+    public void showPinAuthenticator(String sessionDataKey) {
+        final String sessionDataKeyValue = sessionDataKey;
         hideAllAuthenticators();
 
         View vwAuthPin = findViewById(R.id.authPin);
@@ -164,26 +205,63 @@ public class ActivityAuthorize extends FragmentActivity {
             public void onSuccess(int mode) {
                 setAuthenticationStatus(ServerAPI.Athentication.SUCCESS);
                 setResult(Activity.RESULT_OK);
-                finish() ;
+                ServerAPI.getInstance(context).updateAdapter("success", sessionDataKeyValue, new ServerAPI.ResponseListener() {
+                    @Override
+                    public void onSuccess() throws JSONException {
+                        Log.e("onSuccess", "Pin Authentication");
+                    }
+
+                    @Override
+                    public void onFailure(String reason) {
+                        Log.e("onFailure", "Pin Authentication");
+
+                    }
+                });
+                finish();
             }
 
             @Override
             public void onAttemptExceed(int mode) {
                 setAuthenticationStatus(ServerAPI.Athentication.FAILED);
+                ServerAPI.getInstance(context).updateAdapter("failure", sessionDataKeyValue, new ServerAPI.ResponseListener() {
+                    @Override
+                    public void onSuccess() throws JSONException {
+                        Log.e("onSuccess", "Pin Authentication");
+                    }
+
+                    @Override
+                    public void onFailure(String reason) {
+                        Log.e("onFailure", "Pin Authentication");
+
+                    }
+                });
                 setResult(Activity.RESULT_CANCELED);
-                finish() ;
+                finish();
             }
 
             @Override
             public void onDataNotFound() {
                 setAuthenticationStatus(ServerAPI.Athentication.FAILED);
+                ServerAPI.getInstance(context).updateAdapter("failure", sessionDataKeyValue, new ServerAPI.ResponseListener() {
+                    @Override
+                    public void onSuccess() throws JSONException {
+                        Log.e("onSuccess", "Pin Authentication");
+                    }
+
+                    @Override
+                    public void onFailure(String reason) {
+                        Log.e("onFailure", "Pin Authentication");
+
+                    }
+                });
                 setResult(Activity.RESULT_CANCELED);
-                finish() ;
+                finish();
             }
         });
     }
 
-    public void showFingerprintAuthenticator() {
+    public void showFingerprintAuthenticator(final String sessionDataKey) {
+        final String sessionDataKeyValue = sessionDataKey;
         hideAllAuthenticators();
         View vwAuthFingerprint = findViewById(R.id.authFingerprint);
         vwAuthFingerprint.setVisibility(View.VISIBLE);
@@ -192,21 +270,45 @@ public class ActivityAuthorize extends FragmentActivity {
         fingerprintFragment.setFingerListener(new FingerprintFragment.FingerprintListener() {
             @Override
             public void onChangeAuthenticationPin() {
-                showPinAuthenticator();
+                showPinAuthenticator(sessionDataKey);
             }
 
             @Override
             public void onSuccess() {
                 setAuthenticationStatus(ServerAPI.Athentication.SUCCESS);
+                ServerAPI.getInstance(context).updateAdapter("success", sessionDataKeyValue, new ServerAPI.ResponseListener() {
+                    @Override
+                    public void onSuccess() throws JSONException {
+                        Log.e("onSuccess", "Fingerprint Authentication");
+                    }
+
+                    @Override
+                    public void onFailure(String reason) {
+                        Log.e("onFAilure", "Fingerprint Authentication");
+
+                    }
+                });
                 setResult(Activity.RESULT_OK);
-                finish() ;
+                finish();
             }
 
             @Override
             public void onAttemptExceed() {
                 setAuthenticationStatus(ServerAPI.Athentication.FAILED);
+                ServerAPI.getInstance(context).updateAdapter("failure", sessionDataKeyValue, new ServerAPI.ResponseListener() {
+                    @Override
+                    public void onSuccess() throws JSONException {
+                        Log.e("onSuccess", "Fingerprint Authentication");
+                    }
+
+                    @Override
+                    public void onFailure(String reason) {
+                        Log.e("onFAilure", "Fingerprint Authentication");
+
+                    }
+                });
                 setResult(Activity.RESULT_CANCELED);
-                finish() ;
+                finish();
             }
 
         });
@@ -214,18 +316,18 @@ public class ActivityAuthorize extends FragmentActivity {
 
     public void setAuthenticationStatus(int status) {
         String strMSISDN = MySettings.getMSISDN(this);
-        ServerAPI.getInstance(this).setAuthenticationStatus(strMSISDN, status,messageId,new ServerAPI.ResponseListener() {
+        ServerAPI.getInstance(this).setAuthenticationStatus(strMSISDN, status, messageId, new ServerAPI.ResponseListener() {
             @Override
             public void onSuccess() throws JSONException {
-                Log.e("onSuccess","Activitymain");
+                Log.e("onSuccess", "Activitymain");
             }
 
             @Override
             public void onFailure(String reason) {
-                Log.e("onFAilure","Activitymain");
+                Log.e("onFAilure", "Activitymain");
 
             }
         });
-        finish() ;
+        finish();
     }
 }

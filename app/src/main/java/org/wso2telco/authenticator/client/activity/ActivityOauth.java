@@ -19,7 +19,7 @@ package org.wso2telco.authenticator.client.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,30 +39,24 @@ public class ActivityOauth extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_oauth);
         endpoint = getMyUrl();
-        //Log.d("endpoint", endpoint);
         wv1 = (WebView) findViewById(R.id.webview01);
-        //wv1.setWebViewClient(new myWebClient());
+       // wv1.setBackgroundColor(Color.TRANSPARENT);
+       // wv1.setBackgroundResource(R.drawable.load);
+        /////
         wv1.getSettings().setJavaScriptEnabled(true);
         wv1.getSettings().setDomStorageEnabled(true);
-
         wv1.setWebViewClient(new WebViewClient() {
             @SuppressWarnings("deprecation")
-
-            public boolean shouldOverrideUrlLoading(WebView view,String url) {
-                try{
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                try {
                     view.loadUrl(url);
-                    Log.d("url", url);
-                    Log.d("zz", "boolean method!!");
-                    if(view.getUrl().contains("playground2")&& view.getUrl().contains("&code=")){
-                        Log.d("zz", "boolean method-inside!!");
+                    if (view.getUrl().contains("playground2") && view.getUrl().contains("&code=")) {
                         Intent intent = new Intent(getBaseContext(), ActivitySplash.class);
                         intent.putExtra("URL", view.getUrl());
                         finish();
                         startActivity(intent);
                     }
-
-                }
-                catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 return true;
@@ -79,10 +73,10 @@ public class ActivityOauth extends Activity {
         wv1.loadUrl(endpoint);
     }
 
-    private String getMyUrl(){
+    private String getMyUrl() {
         String scope = EnvironmentDTO.scope;
-        if(scope.contains("openid")){
-            String url = EnvironmentDTO.getOpenidEndpoint()+"&scope="+scope+"&redirect_uri="+EnvironmentDTO.getCallBackUrl()+"&client_id="+EnvironmentDTO.getClientID();
+        if (scope.contains("openid")) {
+            String url = EnvironmentDTO.getOpenidEndpoint() + "&scope=" + scope + "&redirect_uri=" + EnvironmentDTO.getCallBackUrl() + "&client_id=" + EnvironmentDTO.getClientID();
             return url;
         }
         return null;

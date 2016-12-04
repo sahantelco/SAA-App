@@ -34,7 +34,7 @@ import org.wso2telco.authenticator.client.fragment.PinFragment;
 import org.wso2telco.authenticator.client.util.MyDevice;
 
 
-public class ActivityPin extends FragmentActivity  {
+public class ActivityPin extends FragmentActivity {
 
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -46,19 +46,19 @@ public class ActivityPin extends FragmentActivity  {
             @Override
             public void onSuccess(int mode) {
                 setResult(Activity.RESULT_OK);
-                finish() ;
+                finish();
             }
 
             @Override
             public void onAttemptExceed(int mode) {
                 setResult(Activity.RESULT_CANCELED);
-                finish() ;
+                finish();
             }
 
             @Override
             public void onDataNotFound() {
                 setResult(Activity.RESULT_CANCELED);
-                finish() ;
+                finish();
             }
         });
     }

@@ -35,6 +35,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static final String INTENT_MSG_ID = "ref" ;
     public static final String INTENT_LOA = "acr" ;
     public static final String INTENT_SP_URL = "sp_url" ;
+    //public static final String SESSION_DATA_KEY = ""
 
     public interface LOA {
         public static int Level2 = 2;
@@ -56,10 +57,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             intent.addCategory(Intent.CATEGORY_LAUNCHER);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(INTENT_MSG,remoteMessage.getData().get(INTENT_MSG));
+            Log.d("Intent_msg",remoteMessage.getData().get(INTENT_MSG));
             intent.putExtra(INTENT_MSG_ID,remoteMessage.getData().get(INTENT_MSG_ID));
             intent.putExtra(INTENT_APP_NAME,remoteMessage.getData().get(INTENT_APP_NAME));
+            Log.d("Intent_AppNAm",remoteMessage.getData().get(INTENT_APP_NAME));
             intent.putExtra(INTENT_LOA,remoteMessage.getData().get(INTENT_LOA));
             intent.putExtra(INTENT_SP_URL,remoteMessage.getData().get(INTENT_SP_URL));
+            Log.d("Intent_apurl",remoteMessage.getData().get(INTENT_SP_URL));
             ComponentName cn = new ComponentName(getApplicationContext(), ActivityAuthorize.class);
             intent.setComponent(cn);
             startActivity(intent);

@@ -36,7 +36,7 @@ public class MySettings {
     private static final String MSISDN = "MSISDN" ;
     private static final String PLATFORM = "Android" ;
 
-    private static final int DEFAULT_DEVICE_REGISTRATION_STATUS = Registration.NOT_REGISTERED ;
+    private static  int DEFAULT_DEVICE_REGISTRATION_STATUS = Registration.NOT_REGISTERED ;
 
     public interface Authentication {
         public static String PIN = "PIN";
@@ -81,6 +81,10 @@ public class MySettings {
         final SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.putString(MSISDN , newValue);
         editor.commit();
+    }
+
+    public static void setDeviceRegistrationStatus(){
+        DEFAULT_DEVICE_REGISTRATION_STATUS = Registration.REGISTERED;
     }
 
     public static void setPinSalt(Context context, String newValue) {

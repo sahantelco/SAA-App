@@ -44,15 +44,15 @@ import org.wso2telco.authenticator.client.fragment.FingerprintFragment;
 import org.wso2telco.authenticator.client.fragment.PinFragment;
 import org.wso2telco.authenticator.client.server.ServerAPI;
 import org.wso2telco.authenticator.client.util.MyDevice;
-import org.wso2telco.authenticator.client.util.MySettings ;
+import org.wso2telco.authenticator.client.util.MySettings;
 
 public class ActivityMain extends Activity {
 
     private static final String TAG = "ActivityMain";
     static final int REQUEST_READ_PHONE_STATE = 100;
 
-    TextView tvRegStatus ;
-    TextView tvRegRetry ;
+    TextView tvRegStatus;
+    TextView tvRegRetry;
 
     public interface Request {
         public static int SETTINGS = 0;
@@ -70,10 +70,10 @@ public class ActivityMain extends Activity {
             init();
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.e("onCreate error",e.toString());
+            Log.e("onCreate error", e.toString());
         }
         MyDevice.setTaskBarColored(this);
-        Log.e("PushTokenMain",MySettings.getDevicePushToken(this));
+        Log.e("PushTokenMain", MySettings.getDevicePushToken(this));
     }
 
     @Override
@@ -87,37 +87,39 @@ public class ActivityMain extends Activity {
                 startActivity(i);
             } else if (requestCode == Request.INITIAL_PIN_SETTING) {
                 try {
-                    init() ;
+                    init();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Log.e("onActivityResult error",e.toString());
+                    Log.e("onActivityResult error", e.toString());
                 }
             } else if (requestCode == Request.FINGERPRINT) {
-                if (data.getIntExtra(FingerprintFragment.STATUS,0) == FingerprintFragment.Return.SHOW_PIN)
-                    showPinActivity(PinFragment.SECURITY_TYPE_ASK_FOR_PIN,Request.SETTINGS);
-                else if (data.getIntExtra(FingerprintFragment.STATUS,0) == FingerprintFragment.Return.SUCCESS)
+                if (data.getIntExtra(FingerprintFragment.STATUS, 0) == FingerprintFragment.Return.SHOW_PIN)
+                    showPinActivity(PinFragment.SECURITY_TYPE_ASK_FOR_PIN, Request.SETTINGS);
+                else if (data.getIntExtra(FingerprintFragment.STATUS, 0) == FingerprintFragment.Return.SUCCESS)
                     showSettingActivity();
             }
         }
     }
+
     private void init() throws JSONException {
-       if (!MySettings.isPinCodeSet(this))
-            showPinActivity(PinFragment.SECURITY_TYPE_NEW_PIN,Request.INITIAL_PIN_SETTING);
-       else if (!MyDevice.hasSIM(this))
+        if (!MySettings.isPinCodeSet(this))
+            showPinActivity(PinFragment.SECURITY_TYPE_NEW_PIN, Request.INITIAL_PIN_SETTING);
+        else if (!MyDevice.hasSIM(this))
             showNoSim(View.VISIBLE);
         else if (MySettings.getDeviceRegistrationStatus(this) == MySettings.Registration.NOT_REGISTERED) {
             if (!MyDevice.isInternetConnectedAndByDataNetwork(this))
                 showNoMobileData(View.VISIBLE);
-            else
+            else{
                 showDeviceRegistration(View.VISIBLE);
-        }
-        else if (!MyDevice.isInternetConnected(this))
+                MySettings.setDeviceRegistrationStatus();
+            }
+
+        } else if (!MyDevice.isInternetConnected(this))
             showNoInternet(View.VISIBLE);
-        else
-       {
-           Log.e("PushTokenMain",MySettings.getDevicePushToken(this));
-           waitForAuthorization();
-       }
+        else {
+            Log.e("PushTokenMain", MySettings.getDevicePushToken(this));
+            waitForAuthorization();
+        }
 
     }
 
@@ -143,8 +145,7 @@ public class ActivityMain extends Activity {
         if (MyDevice.isInternetConnectedAndByDataNetwork(this)) {
             showNoMobileData(View.GONE);
             init();
-        }
-        else
+        } else
             showToast(R.string.no_mobile_data);
     }
 
@@ -152,8 +153,7 @@ public class ActivityMain extends Activity {
         if (MyDevice.isInternetConnected(this)) {
             showNoInternet(View.GONE);
             init();
-        }
-        else
+        } else
             showToast(R.string.no_internet);
     }
 
@@ -163,9 +163,9 @@ public class ActivityMain extends Activity {
             if (MyDevice.fingerprintStatus(this) == MyDevice.FingerprintStatus.HARDWARE_SUPPORTED_AND_SET)
                 showFingerprintActivity();
             else
-                showPinActivity(PinFragment.SECURITY_TYPE_ASK_FOR_PIN,Request.SETTINGS);
+                showPinActivity(PinFragment.SECURITY_TYPE_ASK_FOR_PIN, Request.SETTINGS);
         } else
-            showPinActivity(PinFragment.SECURITY_TYPE_ASK_FOR_PIN,Request.SETTINGS);
+            showPinActivity(PinFragment.SECURITY_TYPE_ASK_FOR_PIN, Request.SETTINGS);
     }
 
     public void onClickRecovery(View v) {
@@ -180,7 +180,8 @@ public class ActivityMain extends Activity {
     public void onClickAuthorize(View v) throws JSONException {
         authenticateDevice();
     }
-//////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////
     private void showNoSim(int visibility) {
         findViewById(R.id.overlay_no_sim).setVisibility(visibility);
     }
@@ -198,7 +199,7 @@ public class ActivityMain extends Activity {
         blink(txtAwaiting);
     }
 
-    private void blink (TextView tv) {
+    private void blink(TextView tv) {
         Animation anim = new AlphaAnimation(0.0f, 1.0f);
         anim.setDuration(500);
         anim.setStartOffset(20);
@@ -211,7 +212,7 @@ public class ActivityMain extends Activity {
         Toast.makeText(this, messageId, Toast.LENGTH_SHORT).show();
     }
 
-    private void showPinActivity(int mode,int returnType) {
+    private void showPinActivity(int mode, int returnType) {
         Intent i = new Intent(this, ActivityPin.class);
         i.putExtra(PinFragment.SECURITY_TYPE, mode);
         startActivityForResult(i, returnType);
@@ -241,7 +242,7 @@ public class ActivityMain extends Activity {
     private void showDeviceRegistration(int visibility) throws JSONException {
         findViewById(R.id.overlay_device_registration).setVisibility(visibility);
         if (View.VISIBLE == visibility)
-          registerDeviceWithCheck();
+            registerDeviceWithCheck();
     }
 
     public void onClickRetryRegistration(View v) throws JSONException {
@@ -259,38 +260,37 @@ public class ActivityMain extends Activity {
         String pushToken = MySettings.getDevicePushToken(this);
         String platform = MySettings.getDevicePlatform(this);
 
-        Log.e("shan",pushToken);
+        Log.e("saa", pushToken);
 
         blink(tvRegStatus);
 
         if (MyDevice.isTelephonyPermissionGranted(this)) {
             if (!pushToken.isEmpty())
-               registerDevice(deviceId,pushToken,platform);
+                registerDevice(deviceId, pushToken, platform);
             else {
                 tvRegStatus.clearAnimation();
                 tvRegStatus.setText(R.string.pushtoken_not_found);
                 tvRegRetry.setVisibility(View.VISIBLE);
             }
-        }
-        else {
+        } else {
             tvRegStatus.clearAnimation();
             tvRegStatus.setText(R.string.no_permission);
             tvRegRetry.setVisibility(View.VISIBLE);
         }
     }
 
-    private void registerDevice(String deviceId,String pushToken,String platform) throws JSONException {
+    private void registerDevice(String deviceId, String pushToken, String platform) throws JSONException {
         ServerAPI.getInstance(this).register(deviceId, pushToken, platform, new ServerAPI.ResponseListener() {
             @Override
             public void onSuccess() throws JSONException {
-                Log.e("onSuccess","Activitymain");
+                Log.e("onSuccess", "Activitymain");
                 showDeviceRegistration(View.GONE);
                 //init();
             }
 
             @Override
             public void onFailure(String reason) {
-                Log.e("onFAilure","Activitymain");
+                Log.e("onFAilure", "Activitymain");
                 tvRegStatus.clearAnimation();
                 tvRegStatus.setText(R.string.register_failed);
                 tvRegRetry.setVisibility(View.VISIBLE);
@@ -325,13 +325,13 @@ public class ActivityMain extends Activity {
 
             @Override
             public void onSuccess() throws JSONException {
-                Log.e("onSuccess","Activitymain");
+                Log.e("onSuccess", "Activitymain");
                 showDeviceRegistration(View.GONE);
             }
 
             @Override
             public void onFailure(String reason) {
-                Log.e("onFAilure","Activitymain");
+                Log.e("onFAilure", "Activitymain");
                 tvRegStatus.clearAnimation();
                 tvRegStatus.setText("Authentication Failed!");
                 tvRegRetry.setVisibility(View.VISIBLE);
