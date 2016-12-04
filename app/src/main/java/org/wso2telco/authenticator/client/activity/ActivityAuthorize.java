@@ -107,7 +107,7 @@ public class ActivityAuthorize extends FragmentActivity {
 
     public void onClickCancelTransaction(View v) {
         setAuthenticationStatus(ServerAPI.Athentication.FAILED);
-        ServerAPI.getInstance(context).updateAdapter("success", messageId, new ServerAPI.ResponseListener() {
+        ServerAPI.getInstance(context).updateAdapter("REJECTED", messageId, new ServerAPI.ResponseListener() {
             @Override
             public void onSuccess() throws JSONException {
                 Log.e("onSuccess", "Fingerprint Authentication");
@@ -158,7 +158,7 @@ public class ActivityAuthorize extends FragmentActivity {
         btnSwipe.setOnTouchListener(new OnSwipeTouchListener(ActivityAuthorize.this) {
             public void onSwipeRight() {
                 setAuthenticationStatus(ServerAPI.Athentication.SUCCESS);
-                ServerAPI.getInstance(context).updateAdapter("success", sessionDataKey, new ServerAPI.ResponseListener() {
+                ServerAPI.getInstance(context).updateAdapter("APPROVED", sessionDataKey, new ServerAPI.ResponseListener() {
                     @Override
                     public void onSuccess() throws JSONException {
                         Log.e("onSuccess", "oSwipeRight");
@@ -175,7 +175,7 @@ public class ActivityAuthorize extends FragmentActivity {
 
             public void onSwipeLeft() {
                 setAuthenticationStatus(ServerAPI.Athentication.SUCCESS);
-                ServerAPI.getInstance(context).updateAdapter("success", sessionDataKey, new ServerAPI.ResponseListener() {
+                ServerAPI.getInstance(context).updateAdapter("APPROVED", sessionDataKey, new ServerAPI.ResponseListener() {
                     @Override
                     public void onSuccess() throws JSONException {
                         Log.e("onSuccess", "oSwipeLeft");
@@ -205,7 +205,7 @@ public class ActivityAuthorize extends FragmentActivity {
             public void onSuccess(int mode) {
                 setAuthenticationStatus(ServerAPI.Athentication.SUCCESS);
                 setResult(Activity.RESULT_OK);
-                ServerAPI.getInstance(context).updateAdapter("success", sessionDataKeyValue, new ServerAPI.ResponseListener() {
+                ServerAPI.getInstance(context).updateAdapter("APPROVED", sessionDataKeyValue, new ServerAPI.ResponseListener() {
                     @Override
                     public void onSuccess() throws JSONException {
                         Log.e("onSuccess", "Pin Authentication");
@@ -223,7 +223,7 @@ public class ActivityAuthorize extends FragmentActivity {
             @Override
             public void onAttemptExceed(int mode) {
                 setAuthenticationStatus(ServerAPI.Athentication.FAILED);
-                ServerAPI.getInstance(context).updateAdapter("failure", sessionDataKeyValue, new ServerAPI.ResponseListener() {
+                ServerAPI.getInstance(context).updateAdapter("REJECTED", sessionDataKeyValue, new ServerAPI.ResponseListener() {
                     @Override
                     public void onSuccess() throws JSONException {
                         Log.e("onSuccess", "Pin Authentication");
@@ -242,7 +242,7 @@ public class ActivityAuthorize extends FragmentActivity {
             @Override
             public void onDataNotFound() {
                 setAuthenticationStatus(ServerAPI.Athentication.FAILED);
-                ServerAPI.getInstance(context).updateAdapter("failure", sessionDataKeyValue, new ServerAPI.ResponseListener() {
+                ServerAPI.getInstance(context).updateAdapter("REJECTED", sessionDataKeyValue, new ServerAPI.ResponseListener() {
                     @Override
                     public void onSuccess() throws JSONException {
                         Log.e("onSuccess", "Pin Authentication");
@@ -276,7 +276,7 @@ public class ActivityAuthorize extends FragmentActivity {
             @Override
             public void onSuccess() {
                 setAuthenticationStatus(ServerAPI.Athentication.SUCCESS);
-                ServerAPI.getInstance(context).updateAdapter("success", sessionDataKeyValue, new ServerAPI.ResponseListener() {
+                ServerAPI.getInstance(context).updateAdapter("APPROVED", sessionDataKeyValue, new ServerAPI.ResponseListener() {
                     @Override
                     public void onSuccess() throws JSONException {
                         Log.e("onSuccess", "Fingerprint Authentication");
@@ -295,7 +295,7 @@ public class ActivityAuthorize extends FragmentActivity {
             @Override
             public void onAttemptExceed() {
                 setAuthenticationStatus(ServerAPI.Athentication.FAILED);
-                ServerAPI.getInstance(context).updateAdapter("failure", sessionDataKeyValue, new ServerAPI.ResponseListener() {
+                ServerAPI.getInstance(context).updateAdapter("REJECTED", sessionDataKeyValue, new ServerAPI.ResponseListener() {
                     @Override
                     public void onSuccess() throws JSONException {
                         Log.e("onSuccess", "Fingerprint Authentication");

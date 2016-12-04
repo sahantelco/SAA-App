@@ -31,6 +31,7 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wso2telco.authenticator.client.oauthconnection.EnvironmentDTO;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -191,7 +192,7 @@ public class ServerAPI {
     // Send Authentication Status
     public void updateAdapter(final String status, final String ref, final ResponseListener responseListener) {
 
-        String url = END_POINT + "api/v1/clients/#/auth_response";
+        String url = EnvironmentDTO.updatestatus_url;
 
         JSONObject params = new JSONObject();
         try {

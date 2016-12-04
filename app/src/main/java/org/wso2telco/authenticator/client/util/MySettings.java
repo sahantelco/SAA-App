@@ -36,7 +36,7 @@ public class MySettings {
     private static final String MSISDN = "MSISDN" ;
     private static final String PLATFORM = "Android" ;
 
-    private static  int DEFAULT_DEVICE_REGISTRATION_STATUS = Registration.NOT_REGISTERED ;
+    private static  int DEFAULT_DEVICE_REGISTRATION_STATUS = Registration.REGISTERED ;
 
     public interface Authentication {
         public static String PIN = "PIN";
