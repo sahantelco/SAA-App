@@ -88,7 +88,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignRight="@+id/txtAwaiting"
             android:layout_alignEnd="@+id/txtAwaiting"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
 
     </RelativeLayout>

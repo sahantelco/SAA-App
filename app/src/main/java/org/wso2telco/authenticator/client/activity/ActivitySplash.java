@@ -154,7 +154,7 @@ public class ActivitySplash extends Activity {
         }
 
         protected void onPostExecute(String result) {
-           // Log.d("token code", tokenCodeValue);
+            Log.d("token code", tokenCodeValue);
             ServerAPI.TOKEN = tokenCodeValue;
         }
 

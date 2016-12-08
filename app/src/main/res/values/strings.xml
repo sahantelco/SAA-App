@@ -19,6 +19,7 @@
     <string name="change_pin_desc">change pin code use in tranaction and application settings</string>
     <string name="success_pin_change">successfully changed pin no</string>
     <string name="act_cancel">Cancel</string>
+    <string name="load">Loading........</string>
 
     <!--transaction_settings-->
     <string name="settings">Settings</string>
@@ -43,7 +44,9 @@
     <string name="waiting_for_authorization">Waiting for authorization</string>
     <string name="not_registered">Device not registered</string>
     <string name="register">Register</string>
-    <string name="register_failed">Registration failed</string>
+    <string name="alredy_registered">Registration failed.You have already registered with the
+    sevice.Contact Support Team of WSO2 Telco</string>
+    <string name="registration_error">Registration failed.Error in registration</string>
     <string name="no_permission">No permission to for Telephony services</string>
     <string name="pushtoken_not_found">Push Token not found</string>
     <string name="try_pin">Try with PIN</string>

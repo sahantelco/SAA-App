@@ -110,12 +110,12 @@ public class ActivityAuthorize extends FragmentActivity {
         ServerAPI.getInstance(context).updateAdapter("REJECTED", messageId, new ServerAPI.ResponseListener() {
             @Override
             public void onSuccess() throws JSONException {
-                Log.e("onSuccess", "Fingerprint Authentication");
+                Log.e("onSuccess", "On cancel");
             }
 
             @Override
             public void onFailure(String reason) {
-                Log.e("onFAilure", "Fingerprint Authentication");
+                Log.e("onFAilure", "On cancel");
 
             }
         });
@@ -315,7 +315,9 @@ public class ActivityAuthorize extends FragmentActivity {
     }
 
     public void setAuthenticationStatus(int status) {
-        String strMSISDN = MySettings.getMSISDN(this);
+        //String strMSISDN = MySettings.getMSISDN(this);
+        String strMSISDN = "911111111111";
+        Log.d("msisdn at setAuthen",strMSISDN);
         ServerAPI.getInstance(this).setAuthenticationStatus(strMSISDN, status, messageId, new ServerAPI.ResponseListener() {
             @Override
             public void onSuccess() throws JSONException {

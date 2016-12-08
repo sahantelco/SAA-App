@@ -146,6 +146,20 @@ public class MyDevice {
         return clientDeviceId ;
     }
 
+    public static String getMsisdn(Context context) {
+
+        String msisdn = "";
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+            Log.d("inside if","Inside If");
+            msisdn = getTelephonyManagerService(context).getLine1Number();
+            Log.d("msisdn myde if val",msisdn);
+
+        }
+
+        Log.d("msisdn mydevice val",msisdn);
+        return msisdn;
+    }
+
     public static boolean isTelephonyPermissionGranted(Activity activity) {
         boolean flag = false ;
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)

@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
+
     <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
 
     <application
@@ -16,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.ActivityOauth"
+            android:name=".activity.ActivityLauncher"
             android:label="@string/app_name"
             android:theme="@style/Theme.Transparent">
             <intent-filter>
@@ -26,6 +27,7 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activity.ActivityOauth" />
         <activity android:name=".activity.ActivityMain" />
         <activity android:name=".activity.ActivitySplash" />
         <activity android:name=".activity.ActivityFingerprint" />
@@ -45,5 +47,6 @@
             </intent-filter>
         </service>
     </application>
+
 
 </manifest>

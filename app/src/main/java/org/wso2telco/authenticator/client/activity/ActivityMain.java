@@ -19,6 +19,7 @@
 package org.wso2telco.authenticator.client.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -111,7 +112,7 @@ public class ActivityMain extends Activity {
                 showNoMobileData(View.VISIBLE);
             else{
                 showDeviceRegistration(View.VISIBLE);
-                MySettings.setDeviceRegistrationStatus();
+                //MySettings.setDeviceRegistrationStatus();
             }
 
         } else if (!MyDevice.isInternetConnected(this))
@@ -259,8 +260,11 @@ public class ActivityMain extends Activity {
         String deviceId = MySettings.getClientDeviceId(this);
         String pushToken = MySettings.getDevicePushToken(this);
         String platform = MySettings.getDevicePlatform(this);
+        String msisdn = MyDevice.getMsisdn(this);
 
-        Log.e("saa", pushToken);
+        Log.e("MSISDN new",msisdn);
+
+        Log.e("saa reg with check", pushToken);
 
         blink(tvRegStatus);
 
@@ -279,12 +283,16 @@ public class ActivityMain extends Activity {
         }
     }
 
-    private void registerDevice(String deviceId, String pushToken, String platform) throws JSONException {
+    private void registerDevice(String deviceId, String pushToken, String platform)
+            throws
+            JSONException {
+        //String strMSISDN = MySettings.getMSISDN(this);
         ServerAPI.getInstance(this).register(deviceId, pushToken, platform, new ServerAPI.ResponseListener() {
             @Override
             public void onSuccess() throws JSONException {
                 Log.e("onSuccess", "Activitymain");
                 showDeviceRegistration(View.GONE);
+                MySettings.setDeviceRegistrationStatus(getBaseContext(),MySettings.Registration.REGISTERED);
                 //init();
             }
 
@@ -292,7 +300,10 @@ public class ActivityMain extends Activity {
             public void onFailure(String reason) {
                 Log.e("onFAilure", "Activitymain");
                 tvRegStatus.clearAnimation();
-                tvRegStatus.setText(R.string.register_failed);
+                if(reason.equalsIgnoreCase("Device Already registered"))
+                    tvRegStatus.setText(R.string.alredy_registered);
+                else if(reason.equalsIgnoreCase("Error in Registration"))
+                    tvRegStatus.setText(R.string.registration_error);
                 tvRegRetry.setVisibility(View.VISIBLE);
             }
         });

@@ -34,8 +34,8 @@ dependencies {
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.android.support:multidex:1.0.0'
     compile 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
-    // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5'
+    compile 'com.koushikdutta.ion:ion:2.+'
 
     testCompile 'junit:junit:4.12'
 }

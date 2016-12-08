@@ -35,7 +35,7 @@ public class EnvironmentDTO {
     private static String sandbox_authorization = "Bearer YjJJRGFROEZhVldVVGczYTFPM2RsdDdUb0IwYTpLX0N1d0ZCbnJXVm1YX0F0YlBjcm5mazJrbVVh";
     private static String sandbox_userInfoEndpoint = "https://sandbox.mconnect.wso2telco.com/oauth2/userinfo?schema=openid";
     private static String sandbox_tokenEndpoint = "https://sandbox.mconnect.wso2telco.com/oauth2/token?redirect_uri=http://jenkins.wso2telco.com:9763/playground2/oauth2.jsp&grant_type=authorization_code&code=";
-    public static String updatestatus_url = "http://localhost:9763/SessionUpdater/tnspoints/endpoint/saa/status";
+    public static String updatestatus_url = "https://sandbox.mconnect.wso2telco.com/SessionUpdater/tnspoints/endpoint/saa/status";
 
     public static String getClientID() {
         if (environmnet.equals(sandboxString)) {
