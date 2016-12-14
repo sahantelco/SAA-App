@@ -70,7 +70,7 @@ public class ActivitySplash extends Activity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             aouthCodeValue = getAouthCodeFromUrl(extras.getString("URL"));
-            Log.d("Auth Code value", aouthCodeValue);
+            Log.d("Aouth Code value", aouthCodeValue);
         }
 
         TokenRequest tokenTask = new TokenRequest();
@@ -96,7 +96,6 @@ public class ActivitySplash extends Activity {
     }
 
     private class TokenRequest extends AsyncTask<Void, Void, String> {
-
 
         HttpResponse response;
 
@@ -133,7 +132,6 @@ public class ActivitySplash extends Activity {
             }
 
             HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());
-            ///////////
             HttpPost httpPost = new HttpPost(tokenUrl);
             httpPost.addHeader("Authorization", EnvironmentDTO.getAOutherizationHeaderValue());
             httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -163,10 +161,8 @@ public class ActivitySplash extends Activity {
             try {
                 rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
             } catch (UnsupportedOperationException e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             } catch (IOException e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
 
@@ -177,7 +173,6 @@ public class ActivitySplash extends Activity {
                     result.append(line);
                 }
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 
@@ -187,11 +182,9 @@ public class ActivitySplash extends Activity {
                     tokenCodeValue = (String) o.get("access_token");
                 }
             } catch (JSONException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
-
     }
 
 //    private class UserInfoRequest extends AsyncTask<Void, Void, String> {
@@ -209,19 +202,15 @@ public class ActivitySplash extends Activity {
 //                response = httpclient.execute(httpGet);
 //                getJsonObject(response);
 //            } catch (UnsupportedEncodingException e) {
-//                // TODO Auto-generated catch block
 //                e.printStackTrace();
 //            } catch (ClientProtocolException e) {
-//                // TODO Auto-generated catch block
 //                e.printStackTrace();
 //            } catch (IOException e) {
-//                // TODO Auto-generated catch block
 //                e.printStackTrace();
 //            } catch (RuntimeException e) {
 //                e.printStackTrace();
 //            }
 //            return null;
-//
 //        }
 //
 //        protected void onPostExecute(String result) {
@@ -234,10 +223,8 @@ public class ActivitySplash extends Activity {
 //            try {
 //                rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 //            } catch (UnsupportedOperationException e1) {
-//                // TODO Auto-generated catch block
 //                e1.printStackTrace();
 //            } catch (IOException e1) {
-//                // TODO Auto-generated catch block
 //                e1.printStackTrace();
 //            }
 //
@@ -248,7 +235,6 @@ public class ActivitySplash extends Activity {
 //                    result.append(line);
 //                }
 //            } catch (IOException e) {
-//                // TODO Auto-generated catch block
 //                e.printStackTrace();
 //            }
 //
@@ -256,7 +242,6 @@ public class ActivitySplash extends Activity {
 //                JSONObject o = new JSONObject(result.toString());
 //                userInfo = o.toString();
 //            } catch (JSONException e) {
-//                // TODO Auto-generated catch block
 //                e.printStackTrace();
 //            }
 //
@@ -264,5 +249,4 @@ public class ActivitySplash extends Activity {
 //
 //    }
 
-    /////////////////////////////////////added up/////////////////////////////////////////
 }

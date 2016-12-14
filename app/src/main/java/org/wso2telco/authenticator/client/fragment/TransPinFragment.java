@@ -24,7 +24,7 @@ import android.view.ViewGroup;
 
 import org.wso2telco.authenticator.client.R;
 
-public class TransPinFragment extends PinFragment  {
+public class TransPinFragment extends PinFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

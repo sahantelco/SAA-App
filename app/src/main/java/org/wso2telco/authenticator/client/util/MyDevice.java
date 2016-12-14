@@ -65,8 +65,7 @@ public class MyDevice {
     }
 
     public static void setTaskBarColored(Activity context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-        {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Window window = context.getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -135,64 +134,59 @@ public class MyDevice {
         return SIM_Present;
     }
 
-    public static String getClientDeviceID(Context context)   {
+    public static String getClientDeviceID(Context context) {
 
-        String clientDeviceId = "" ;
+        String clientDeviceId = "";
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
             String deviceIMSI = getTelephonyManagerService(context).getSubscriberId();
             String deviceIMEI = getTelephonyManagerService(context).getDeviceId();
-            clientDeviceId =  computeMD5Hash(deviceIMSI + deviceIMEI);
+            clientDeviceId = computeMD5Hash(deviceIMSI + deviceIMEI);
         }
-        return clientDeviceId ;
+        return clientDeviceId;
     }
 
     public static String getMsisdn(Context context) {
 
         String msisdn = "";
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-            Log.d("inside if","Inside If");
             msisdn = getTelephonyManagerService(context).getLine1Number();
-            Log.d("msisdn myde if val",msisdn);
-
         }
-
-        Log.d("msisdn mydevice val",msisdn);
         return msisdn;
     }
 
     public static boolean isTelephonyPermissionGranted(Activity activity) {
-        boolean flag = false ;
+        boolean flag = false;
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
-            flag = true ;
+            flag = true;
         else
             ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_READ_PHONE_STATE);
-        return flag ;
+        return flag;
     }
 
     public static boolean isInternetConnectedByDataNetwork(Context context) {
         NetworkInfo activeNetwork = getConnectivityManagerService(context).getActiveNetworkInfo();
         boolean state = activeNetwork != null &&
                 activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE;
-        return state ;
+        return state;
     }
 
     public static boolean isInternetConnected(Context context) {
         NetworkInfo activeNetwork = getConnectivityManagerService(context).getActiveNetworkInfo();
         boolean state = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
-        return state ;
+        return state;
     }
 
     public static boolean isInternetConnectedAndByDataNetwork(Context context) {
         NetworkInfo activeNetwork = getConnectivityManagerService(context).getActiveNetworkInfo();
         boolean state = activeNetwork != null && activeNetwork.isConnectedOrConnecting() &&
                 activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE;
-        return state ;
+        return state;
     }
 
     @TargetApi(Build.VERSION_CODES.M)
     public static int fingerprintStatus(Context context) {
-        int status = FingerprintStatus.HARDWARE_NOT_SUPPORTED ;
+        int status = FingerprintStatus.HARDWARE_NOT_SUPPORTED;
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.USE_FINGERPRINT) == PackageManager.PERMISSION_GRANTED) {
             FingerprintManager fingerprintManager = getFingerprintManagerService(context);
             if (fingerprintManager.hasEnrolledFingerprints()) {
@@ -201,10 +195,10 @@ public class MyDevice {
                 status = FingerprintStatus.HARDWARE_SUPPORTED_AND_NOT_SET;
             }
         }
-        return status ;
+        return status;
     }
 
-    public static void getPackageInfo (Activity activity) {
+    public static void getPackageInfo(Activity activity) {
         try {
             PackageInfo info = activity.getPackageManager().getPackageInfo(
                     activity.getPackageName(),
@@ -220,7 +214,6 @@ public class MyDevice {
         } catch (NoSuchAlgorithmException e) {
         }
     }
-
 
     public static final class PinHash {
         private final String salt;
@@ -240,23 +233,20 @@ public class MyDevice {
         }
     }
 
-    public static PinHash pinToHash(String paramString,String salt)
-    {
+    public static PinHash pinToHash(String paramString, String salt) {
         if (paramString == null)
             return null;
         String str = null;
         byte[] arrayOfByte1 = null;
-        try
-        {
+        try {
             if (salt.isEmpty()) {
-              salt = getSalt() ;
+                salt = getSalt();
             }
             byte[] arrayOfByte2 = (paramString + salt).getBytes();
             byte[] arrayOfByte3 = null;
             MessageDigest localMessageDigest = MessageDigest.getInstance("SHA-1");
             long l1 = System.currentTimeMillis();
-            for (int i = 0; i < 1024; i++)
-            {
+            for (int i = 0; i < 1024; i++) {
                 arrayOfByte1 = null;
                 if (arrayOfByte3 != null)
                     localMessageDigest.update(arrayOfByte3);
@@ -266,11 +256,9 @@ public class MyDevice {
             }
             arrayOfByte1 = byteArrayToHex(arrayOfByte3).getBytes();
             long l2 = System.currentTimeMillis();
-            PinHash pinHash = new PinHash(salt,byteArrayToHex(arrayOfByte1));
-            return pinHash ;
-        }
-        catch (NoSuchAlgorithmException localNoSuchAlgorithmException)
-        {
+            PinHash pinHash = new PinHash(salt, byteArrayToHex(arrayOfByte1));
+            return pinHash;
+        } catch (NoSuchAlgorithmException localNoSuchAlgorithmException) {
             Log.e("LockPatternUtils", "Failed to encode string because of missing algorithm: " + str);
         }
         return null;
@@ -282,14 +270,14 @@ public class MyDevice {
         Random r = new Random();
         int i1 = r.nextInt(max - min + 1) + min;
 
-        Log.e("Salt",String.valueOf(i1));
+        Log.e("Salt", String.valueOf(i1));
 
         return String.valueOf(i1);
     }
 
     public static String byteArrayToHex(byte[] a) {
         StringBuilder sb = new StringBuilder(a.length * 2);
-        for(byte b: a)
+        for (byte b : a)
             sb.append(String.format("%02x", b & 0xff));
         return sb.toString();
     }

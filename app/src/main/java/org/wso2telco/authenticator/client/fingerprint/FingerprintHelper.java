@@ -22,7 +22,6 @@ import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.CancellationSignal;
 
-
 @TargetApi(Build.VERSION_CODES.M)
 public class FingerprintHelper extends FingerprintManager.AuthenticationCallback {
 
@@ -37,7 +36,6 @@ public class FingerprintHelper extends FingerprintManager.AuthenticationCallback
         mFingerprintManager = fingerprintManager;
         mCallback = callback;
     }
-
 
     public boolean isFingerprintAuthAvailable() {
         // noinspection ResourceType
@@ -83,6 +81,7 @@ public class FingerprintHelper extends FingerprintManager.AuthenticationCallback
 
     public interface Callback {
         void onAuthenticated();
+
         void onError();
     }
 }

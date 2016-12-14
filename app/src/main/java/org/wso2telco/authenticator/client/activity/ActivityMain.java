@@ -15,27 +15,20 @@
  * limitations under the License.
 ********************************************************************************************/
 
-
 package org.wso2telco.authenticator.client.activity;
 
 import android.app.Activity;
-import android.content.Context;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,10 +64,8 @@ public class ActivityMain extends Activity {
             init();
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.e("onCreate error", e.toString());
         }
         MyDevice.setTaskBarColored(this);
-        Log.e("PushTokenMain", MySettings.getDevicePushToken(this));
     }
 
     @Override
@@ -91,7 +82,6 @@ public class ActivityMain extends Activity {
                     init();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Log.e("onActivityResult error", e.toString());
                 }
             } else if (requestCode == Request.FINGERPRINT) {
                 if (data.getIntExtra(FingerprintFragment.STATUS, 0) == FingerprintFragment.Return.SHOW_PIN)
@@ -110,9 +100,8 @@ public class ActivityMain extends Activity {
         else if (MySettings.getDeviceRegistrationStatus(this) == MySettings.Registration.NOT_REGISTERED) {
             if (!MyDevice.isInternetConnectedAndByDataNetwork(this))
                 showNoMobileData(View.VISIBLE);
-            else{
+            else {
                 showDeviceRegistration(View.VISIBLE);
-                //MySettings.setDeviceRegistrationStatus();
             }
 
         } else if (!MyDevice.isInternetConnected(this))
@@ -121,7 +110,6 @@ public class ActivityMain extends Activity {
             Log.e("PushTokenMain", MySettings.getDevicePushToken(this));
             waitForAuthorization();
         }
-
     }
 
     public void onClickRetrySIM(View v) {
@@ -177,12 +165,6 @@ public class ActivityMain extends Activity {
         showInfoActivity();
     }
 
-    //////////////////Lakini////////////////
-    public void onClickAuthorize(View v) throws JSONException {
-        authenticateDevice();
-    }
-
-    //////////////////////////////////////////////////////////////////////////
     private void showNoSim(int visibility) {
         findViewById(R.id.overlay_no_sim).setVisibility(visibility);
     }
@@ -253,6 +235,8 @@ public class ActivityMain extends Activity {
 
     private void registerDeviceWithCheck() throws JSONException {
 
+        /////////
+
         tvRegStatus = (TextView) findViewById(R.id.txtRegistrationStatus);
         tvRegRetry = (TextView) findViewById(R.id.txtRegistrationRetry);
         tvRegRetry.setVisibility(View.GONE);
@@ -261,10 +245,6 @@ public class ActivityMain extends Activity {
         String pushToken = MySettings.getDevicePushToken(this);
         String platform = MySettings.getDevicePlatform(this);
         String msisdn = MyDevice.getMsisdn(this);
-
-        Log.e("MSISDN new",msisdn);
-
-        Log.e("saa reg with check", pushToken);
 
         blink(tvRegStatus);
 
@@ -292,17 +272,18 @@ public class ActivityMain extends Activity {
             public void onSuccess() throws JSONException {
                 Log.e("onSuccess", "Activitymain");
                 showDeviceRegistration(View.GONE);
-                MySettings.setDeviceRegistrationStatus(getBaseContext(),MySettings.Registration.REGISTERED);
-                //init();
+                MySettings.setDeviceRegistrationStatus(getBaseContext(), MySettings.Registration.REGISTERED);
+                open("Your smart phone authenticator has been sucesfully enrolled. It will run in" +
+                        " the background");
             }
 
             @Override
             public void onFailure(String reason) {
-                Log.e("onFAilure", "Activitymain");
+                Log.e("onFailure", "Activitymain");
                 tvRegStatus.clearAnimation();
-                if(reason.equalsIgnoreCase("Device Already registered"))
+                if (reason.equalsIgnoreCase("Device Already registered"))
                     tvRegStatus.setText(R.string.alredy_registered);
-                else if(reason.equalsIgnoreCase("Error in Registration"))
+                else if (reason.equalsIgnoreCase("Error in Registration"))
                     tvRegStatus.setText(R.string.registration_error);
                 tvRegRetry.setVisibility(View.VISIBLE);
             }
@@ -328,25 +309,26 @@ public class ActivityMain extends Activity {
         }
     }
 
-    ////////Temporary
-    //Authenticatestatus
-    private void authenticateDevice() throws JSONException {
-        ServerAPI.getInstance(this).setAuthenticationStatus("712295446", 1, "340943904904904343904", new ServerAPI.ResponseListener() {
+    //Open alert dialog box
+    public void open(String message) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage(message);
+        alertDialogBuilder.setPositiveButton("Ok",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        moveTaskToBack(true);
+                    }
+                });
 
-
+        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
-            public void onSuccess() throws JSONException {
-                Log.e("onSuccess", "Activitymain");
-                showDeviceRegistration(View.GONE);
-            }
-
-            @Override
-            public void onFailure(String reason) {
-                Log.e("onFAilure", "Activitymain");
-                tvRegStatus.clearAnimation();
-                tvRegStatus.setText("Authentication Failed!");
-                tvRegRetry.setVisibility(View.VISIBLE);
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
             }
         });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 }

@@ -18,7 +18,9 @@
 package org.wso2telco.authenticator.client.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -61,7 +63,6 @@ public class ActivityAuthorize extends FragmentActivity {
         setContentView(R.layout.activity_authorize);
         MyDevice.setTaskBarColored(this);
         init();
-        //showAuthenticator(LOA.Level0);
     }
 
     private void init() {
@@ -80,7 +81,7 @@ public class ActivityAuthorize extends FragmentActivity {
                 if (URLUtil.isValidUrl(strSP_URL)) {
                     showImage(strSP_URL);
                 }
-                showAuthenticator(levelOfAssurance,messageId);
+                showAuthenticator(levelOfAssurance, messageId);
             } catch (Exception e) {
                 finish();
             }
@@ -107,18 +108,6 @@ public class ActivityAuthorize extends FragmentActivity {
 
     public void onClickCancelTransaction(View v) {
         setAuthenticationStatus(ServerAPI.Athentication.FAILED);
-        ServerAPI.getInstance(context).updateAdapter("REJECTED", messageId, new ServerAPI.ResponseListener() {
-            @Override
-            public void onSuccess() throws JSONException {
-                Log.e("onSuccess", "On cancel");
-            }
-
-            @Override
-            public void onFailure(String reason) {
-                Log.e("onFAilure", "On cancel");
-
-            }
-        });
     }
 
     public void showAuthenticator(int acr, String sessionDataKey) {
@@ -161,12 +150,12 @@ public class ActivityAuthorize extends FragmentActivity {
                 ServerAPI.getInstance(context).updateAdapter("APPROVED", sessionDataKey, new ServerAPI.ResponseListener() {
                     @Override
                     public void onSuccess() throws JSONException {
-                        Log.e("onSuccess", "oSwipeRight");
+                        Log.e("onSuccess", "ONSwipeRight");
                     }
 
                     @Override
                     public void onFailure(String reason) {
-                        Log.e("onFAilure", "onSwipeRight");
+                        Log.e("onFailure", "ONSwipeRight");
 
                     }
                 });
@@ -178,12 +167,12 @@ public class ActivityAuthorize extends FragmentActivity {
                 ServerAPI.getInstance(context).updateAdapter("APPROVED", sessionDataKey, new ServerAPI.ResponseListener() {
                     @Override
                     public void onSuccess() throws JSONException {
-                        Log.e("onSuccess", "oSwipeLeft");
+                        Log.e("onSuccess", "OnSwipeLeft");
                     }
 
                     @Override
                     public void onFailure(String reason) {
-                        Log.e("onFAilure", "onSwipeLeft");
+                        Log.e("onFailure", "OnSwipeLeft");
 
                     }
                 });
@@ -314,22 +303,59 @@ public class ActivityAuthorize extends FragmentActivity {
         });
     }
 
+
     public void setAuthenticationStatus(int status) {
-        //String strMSISDN = MySettings.getMSISDN(this);
         String strMSISDN = "911111111111";
-        Log.d("msisdn at setAuthen",strMSISDN);
+        Log.d("msisdn at setAuthen", strMSISDN);
+
+        //Calling SAA Server to update the transaction status as cancelled.
         ServerAPI.getInstance(this).setAuthenticationStatus(strMSISDN, status, messageId, new ServerAPI.ResponseListener() {
             @Override
             public void onSuccess() throws JSONException {
-                Log.e("onSuccess", "Activitymain");
+//                Log.e("onSuccess", "Activitymain");
+//                open("Authentication complete");
             }
 
             @Override
             public void onFailure(String reason) {
-                Log.e("onFAilure", "Activitymain");
+                Log.e("Fail Authentication", reason);
+            }
+        });
+
+        //Calling SAA Adapter to update the transaction status as cancelled.
+        ServerAPI.getInstance(context).updateAdapter("REJECTED", messageId, new ServerAPI.ResponseListener() {
+            @Override
+            public void onSuccess() throws JSONException {
+                Log.e("onSuccess", "On cancel");
+                notifyUserAndGoBackground("Authentication complete");
+            }
+
+            @Override
+            public void onFailure(String reason) {
+                Log.e("onFailure", "On cancel");
+                notifyUserAndGoBackground("Server Error");
+            }
+        });
+    }
+
+    public void notifyUserAndGoBackground(String message) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage(message);
+        alertDialogBuilder.setPositiveButton("Ok",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        moveTaskToBack(true);
+                    }
+                });
+
+        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
 
             }
         });
-        finish();
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 }

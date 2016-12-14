@@ -43,7 +43,7 @@ public class PinFragment extends Fragment {
     public static final String SECURITY_TYPE = "SECURITY_TYPE";
     private static final int PIN_LENGTH = 4;
 
-    private View fragmentView ;
+    private View fragmentView;
 
     Button button_0;
     Button button_1;
@@ -66,13 +66,15 @@ public class PinFragment extends Fragment {
     TextView textCode;
     TextView textTitle;
 
-    private PinListener pinListener  ;
+    private PinListener pinListener;
 
     class OnClickListener implements View.OnClickListener {
         final int val$digit;
+
         OnClickListener(int i) {
             this.val$digit = i;
         }
+
         public void onClick(View view) {
             insertPinDigit(this.val$digit);
         }
@@ -91,8 +93,8 @@ public class PinFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        fragmentView = view ;
-        init() ;
+        fragmentView = view;
+        init();
     }
 
 
@@ -186,13 +188,13 @@ public class PinFragment extends Fragment {
                     removeAllDigits();
                     this.firstPin = EMPTY_STRING;
                     this.textTitle.setText(getString(R.string.pin_enter_new));
-                    this.SCREEN_MODE = SECURITY_CHANGE_PIN_EXT ;
+                    this.SCREEN_MODE = SECURITY_CHANGE_PIN_EXT;
                 }
                 break;
 
             case SECURITY_CHANGE_PIN_EXT:
                 if (this.firstPin.equals(EMPTY_STRING)) {
-                    this.firstPin = this.mPin ;
+                    this.firstPin = this.mPin;
                     this.textTitle.setText(getString(R.string.pin_enter_second));
                     removeAllDigits();
                 } else if (this.firstPin.equals(this.mPin)) {
@@ -217,9 +219,9 @@ public class PinFragment extends Fragment {
         Bundle extras = getActivity().getIntent().getExtras();
 
         try {
-            this.SCREEN_MODE =  extras.getInt(SECURITY_TYPE) ;
+            this.SCREEN_MODE = extras.getInt(SECURITY_TYPE);
         } catch (Exception e) {
-            this.SCREEN_MODE = SECURITY_TYPE_ASK_FOR_PIN ;
+            this.SCREEN_MODE = SECURITY_TYPE_ASK_FOR_PIN;
         }
 
         switch (this.SCREEN_MODE) {
@@ -234,7 +236,7 @@ public class PinFragment extends Fragment {
                 this.textTitle.setText(R.string.pin_enter_old_pin);
                 break;
             default:
-                this.SCREEN_MODE = SECURITY_TYPE_ASK_FOR_PIN ;
+                this.SCREEN_MODE = SECURITY_TYPE_ASK_FOR_PIN;
                 this.textTitle.setText(R.string.pin_enter_first);
         }
     }
@@ -274,24 +276,26 @@ public class PinFragment extends Fragment {
         pinListener = null;
     }
 
-    public void setPinListener (PinListener pinListener) {
-        this.pinListener = pinListener ;
+    public void setPinListener(PinListener pinListener) {
+        this.pinListener = pinListener;
     }
 
     public interface PinListener {
-        void onSuccess(int mode) ;
-        void onAttemptExceed(int mode) ;
-        void onDataNotFound() ;
+        void onSuccess(int mode);
+
+        void onAttemptExceed(int mode);
+
+        void onDataNotFound();
     }
 
     private boolean isValidPin(String pin) {
-        String salt = MySettings.getPinSalt(getActivity()) ;
+        String salt = MySettings.getPinSalt(getActivity());
         MyDevice.PinHash pinHash = MyDevice.pinToHash(pin, salt);
-        String originalPinHash = MySettings.getPinCode(getActivity()) ;
+        String originalPinHash = MySettings.getPinCode(getActivity());
         if (originalPinHash.equals(pinHash.getHash()))
-            return true ;
+            return true;
         else
-            return false ;
+            return false;
     }
 
     private void setNewPin(String pin) {

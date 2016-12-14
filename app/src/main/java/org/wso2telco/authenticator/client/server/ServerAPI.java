@@ -18,7 +18,6 @@
 package org.wso2telco.authenticator.client.server;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
@@ -29,34 +28,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wso2telco.authenticator.client.entity.RegistrationRequest;
 import org.wso2telco.authenticator.client.oauthconnection.EnvironmentDTO;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 public class ServerAPI {
 
@@ -67,12 +45,11 @@ public class ServerAPI {
     private final String NETWORK_ERROR = "Network Error";
     private final String STATUS = "status";
     private final String MESSAGE_ID = "ref";
-    //private String END_POINT = "http://10.10.12.38:9763/SAA_Authenticator_v1.0/services/serverAPI/";
+    private String END_POINT = "http://10.10.12.38:9763/SAA_Authenticator_v1.0/services/serverAPI/";
     //private String END_POINT = "http://sandbox.mconnect.wso2telco.com/SAA_Authenticator_v1.0/services/serverAPI/";
-    private String END_POINT = "http://sandbox.mconnect.wso2telco.com/SAA_Authenticator_v1.0/services/serverAPI/";
-
+    // private String END_POINT = "http://sandbox.mconnect.wso2telco.com/SAA_Authenticator_v1" +"
+    // .0/services/serverAPI/";
     //private String END_POINT ="http://192.168.8.103:9763/SAA_Authenticator_v1.0/services/serverAPI/";
-
 
     private RequestQueue mRequestQueue;
     private ResponseListener responseListener;
@@ -100,7 +77,13 @@ public class ServerAPI {
         getRequestQueue().add(req);
     }
 
-    // Device Registration
+    /**
+     * Register clients in the Database by calling "api/v1/clients" API.
+     *
+     * @param deviceId
+     * @param platform
+     * @param pushToken
+     */
     public void register(final String deviceId, final String pushToken, final String platform, final ResponseListener responseListener) throws
             JSONException {
         final String url = END_POINT + "api/v1/clients";
@@ -109,9 +92,9 @@ public class ServerAPI {
         this.responseListener = responseListener;
         JSONObject params = new JSONObject();
 
-        Log.d("deviceID",deviceId);
-        Log.d("Platform",platform);
-        Log.d("pushToken",pushToken);
+        Log.d("deviceID", deviceId);
+        Log.d("Platform", platform);
+        Log.d("pushToken", pushToken);
 
 
         try {
@@ -130,17 +113,15 @@ public class ServerAPI {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            Log.e("reponse", response.toString());
+                            Log.e("response", response.toString());
                             if (response.getInt("success") == 1) {
-                                Log.e("rsponse success", "Success API");
                                 responseListener.onSuccess();
                             } else {
-                                Log.e("reponse failure", "failure API");
                                 JSONObject jsonErrorObject = response.getJSONObject("result");
                                 responseListener.onFailure(jsonErrorObject.getString("message"));
                             }
                         } catch (Exception JSonException) {
-                            Log.e("rsponse exception", "exception");
+                            Log.e("response exception", "exception");
                             JSonException.printStackTrace();
                             responseListener.onFailure(API_ERROR);
                         }
@@ -160,10 +141,8 @@ public class ServerAPI {
                 params.put("Authorization", "Bearer " + TOKEN);
                 params.put("msisdn", "911111111111");
                 params.put("Content-Type", "application/json; charset=utf-8");
-                Log.d("URL***",url);
                 return params;
             }
-
         };
 
         jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
@@ -174,115 +153,14 @@ public class ServerAPI {
 
     }
 
-//    private class Registration extends AsyncTask<RegistrationRequest, Void, String> {
-//
-//        HttpResponse response;
-//
-//        protected String doInBackground(RegistrationRequest... params) {
-//
-//            RegistrationRequest registrationRequest = params[0];
-//
-//
-//            String url = END_POINT + "api/v1/clients";
-//            DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-//            //////////////////
-//            SSLContext ctx = null;
-//            try {
-//                ctx = SSLContext.getInstance("TLS");
-//                ctx.init(null, new TrustManager[]{
-//                        new X509TrustManager() {
-//                            public void checkClientTrusted(X509Certificate[] chain, String authType) {
-//                            }
-//
-//                            public void checkServerTrusted(X509Certificate[] chain, String authType) {
-//                            }
-//
-//                            public X509Certificate[] getAcceptedIssuers() {
-//                                return new X509Certificate[]{};
-//                            }
-//                        }
-//                }, null);
-//
-//                HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-//                    public boolean verify(String hostname, SSLSession session) {
-//                        return true;
-//                    }
-//                });
-//            } catch (NoSuchAlgorithmException e) {
-//                e.printStackTrace();
-//            } catch (KeyManagementException e) {
-//                e.printStackTrace();
-//            }
-//
-//            HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());
-//            HttpPost httpPost = new HttpPost(url);
-//            //httpPost.addHeader("Authorization", EnvironmentDTO.getAOutherizationHeaderValue());
-//
-//            try {
-//                httpPost.setEntity(new StringEntity(new Gson().toJson(registrationRequest)));
-//                httpPost.addHeader("Authorization", "Bearer" + TOKEN);
-//                httpPost.addHeader("msisdn", "910773524111");
-//                httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
-//
-//                response = defaultHttpClient.execute(httpPost);
-//                //httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
-//                //response = httpclient.execute(httpPost);
-//                getJsonObject(response);
-//            } catch (UnsupportedEncodingException e) {
-//                e.printStackTrace();
-//            } catch (ClientProtocolException e) {
-//                e.printStackTrace();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            } catch (RuntimeException e) {
-//                e.printStackTrace();
-//            }
-//            return null;
-//
-//        }
-//
-//        protected void onPostExecute(String result) {
-//            //tokenCode.setText(tokenCodeValue);
-//        }
-//
-//        private void getJsonObject(HttpResponse response) {
-//            BufferedReader rd = null;
-//            try {
-//                rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-//            } catch (UnsupportedOperationException e1) {
-//                // TODO Auto-generated catch block
-//                e1.printStackTrace();
-//            } catch (IOException e1) {
-//                // TODO Auto-generated catch block
-//                e1.printStackTrace();
-//            }
-//
-//            StringBuffer result = new StringBuffer();
-//            String line = "";
-//            try {
-//                while ((line = rd.readLine()) != null) {
-//                    result.append(line);
-//                }
-//            } catch (IOException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//
-//            try {
-//                JSONObject o = new JSONObject(result.toString());
-//                if (o.get("success") != null) {
-////                    tokenCodeValue = (String) o.get("success");
-//                }
-//            } catch (JSONException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//        }
-//
-//    }
-    //////////
-
-    // Send Authentication Status
+    /**
+     * Update the  Status for the request by calling "api/v1/clients/#/auth_response"
+     * API.
+     *
+     * @param MSISDN
+     * @param status
+     * @param ref
+     */
     public void setAuthenticationStatus(final String MSISDN, final int status, final String ref, final ResponseListener responseListener) {
 
         String url = END_POINT + "api/v1/clients/#/auth_response";
@@ -295,7 +173,6 @@ public class ServerAPI {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
                 url, params,
@@ -328,16 +205,20 @@ public class ServerAPI {
                 params.put("Authorization", "Bearer " + TOKEN);
                 return params;
             }
-
         };
         addToRequestQueue(jsonObjReq);
     }
 
-    // Send Authentication Status
+    /**
+     * Send the status of the request to adapter
+     *
+     * @param status
+     * @param ref
+     */
     public void updateAdapter(final String status, final String ref, final ResponseListener responseListener) {
 
         String url = EnvironmentDTO.updatestatus_url;
-        Log.d("Session data key",ref);
+        Log.d("Session data key", ref);
 
         JSONObject params = new JSONObject();
         try {

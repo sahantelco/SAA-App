@@ -107,7 +107,9 @@ public class FingerprintFragment extends Fragment
 
     public interface FingerprintListener {
         void onChangeAuthenticationPin();
+
         void onSuccess();
+
         void onAttemptExceed();
     }
 
@@ -127,6 +129,6 @@ public class FingerprintFragment extends Fragment
     public void onDetach() {
         super.onDetach();
         fingerprintListener = null;
-        mFingerprintUiHelper = null ;
-     }
+        mFingerprintUiHelper = null;
+    }
 }

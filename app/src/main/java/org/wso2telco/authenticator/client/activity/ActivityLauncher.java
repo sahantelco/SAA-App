@@ -20,6 +20,7 @@ package org.wso2telco.authenticator.client.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+
 import org.wso2telco.authenticator.client.util.MySettings;
 
 public class ActivityLauncher extends Activity {
@@ -30,7 +31,7 @@ public class ActivityLauncher extends Activity {
         boolean status = MySettings.getActivityOAuth(this);
         if (status == false) {
             startActivity(new Intent(this, ActivityOauth.class));
-            MySettings.setActivityOAuth(this,true);
+            MySettings.setActivityOAuth(this, true);
         } else {
             startActivity(new Intent(this, ActivityMain.class));
         }

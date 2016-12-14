@@ -17,34 +17,20 @@
 
 package org.wso2telco.authenticator.client.activity;
 
-import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.http.SslError;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ImageView;
-
-import com.koushikdutta.ion.Ion;
-
-
 import org.wso2telco.authenticator.client.R;
 import org.wso2telco.authenticator.client.oauthconnection.EnvironmentDTO;
-import org.wso2telco.authenticator.client.util.MySettings;
+
 
 public class ActivityOauth extends Activity {
 
     private WebView webView;
-    private ImageView imageView;
     String endpoint;
 
     @Override
@@ -54,11 +40,6 @@ public class ActivityOauth extends Activity {
         setContentView(R.layout.activity_oauth);
         endpoint = getMyUrl();
         webView = (WebView) findViewById(R.id.webview01);
-        //imageView = (ImageView) findViewById(R.id.imageView);
-       // Ion.with(imageView).load("http://i.imgur.com/pe9g3sU.gif");
-
-       // wv1.setBackgroundColor(Color.TRANSPARENT);
-      //  wv1.setBackgroundResource(R.drawable.connect_to_server);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
         webView.setWebViewClient(new WebViewClient() {
@@ -87,7 +68,6 @@ public class ActivityOauth extends Activity {
         webView.clearCache(true);
         webView.clearHistory();
         webView.loadUrl(endpoint);
-        //wv1.loadUrl("https://www.google.lk/?gfe_rd=cr&ei=Fx5EWJDRNK_G8Aee6Zm4CQ");
     }
 
     private String getMyUrl() {

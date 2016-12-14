@@ -33,8 +33,8 @@ import android.widget.Toast;
 
 import org.wso2telco.authenticator.client.R;
 import org.wso2telco.authenticator.client.fragment.PinFragment;
-import org.wso2telco.authenticator.client.util.MySettings ;
-import org.wso2telco.authenticator.client.util.MyDevice ;
+import org.wso2telco.authenticator.client.util.MySettings;
+import org.wso2telco.authenticator.client.util.MyDevice;
 
 public class ActivitySettings extends Activity {
 
@@ -58,9 +58,8 @@ public class ActivitySettings extends Activity {
         RadioGroup opt_app = (RadioGroup) findViewById(R.id.opt_app);
         opt_app.setOnCheckedChangeListener(listener);
 
-        switch (transAuthMode)
-        {
-            case MySettings.Authentication.PIN :
+        switch (transAuthMode) {
+            case MySettings.Authentication.PIN:
                 opt_trans.check(R.id.opt_trans_pin);
                 break;
             case MySettings.Authentication.FINGER_PRINT:
@@ -68,9 +67,8 @@ public class ActivitySettings extends Activity {
                 break;
         }
 
-        switch (appAuthMode)
-        {
-            case MySettings.Authentication.PIN :
+        switch (appAuthMode) {
+            case MySettings.Authentication.PIN:
                 opt_app.check(R.id.opt_app_pin);
                 break;
             case MySettings.Authentication.FINGER_PRINT:
@@ -79,7 +77,7 @@ public class ActivitySettings extends Activity {
         }
     }
 
-    private void showChangePinActivity(){
+    private void showChangePinActivity() {
         Intent i = new Intent(ActivitySettings.this, ActivityPin.class);
         i.putExtra(PinFragment.SECURITY_TYPE, PinFragment.SECURITY_CHANGE_PIN);
         startActivityForResult(i, SETTINGS);
@@ -90,7 +88,7 @@ public class ActivitySettings extends Activity {
     }
 
     public void onClickClose(View v) {
-        finish() ;
+        finish();
     }
 
 
@@ -118,14 +116,14 @@ public class ActivitySettings extends Activity {
 
         public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-            int deviceFingerprintStatus ;
+            int deviceFingerprintStatus;
 
             switch (checkedId) {
                 case R.id.opt_app_pin:
                     MySettings.setAppAuthMode(ActivitySettings.this, MySettings.Authentication.PIN);
                     break;
                 case R.id.opt_app_fingerprint:
-                    deviceFingerprintStatus = MyDevice.fingerprintStatus(ActivitySettings.this) ;
+                    deviceFingerprintStatus = MyDevice.fingerprintStatus(ActivitySettings.this);
                     switch (deviceFingerprintStatus) {
                         case MyDevice.FingerprintStatus.HARDWARE_SUPPORTED_AND_SET:
                             MySettings.setAppAuthMode(ActivitySettings.this, MySettings.Authentication.FINGER_PRINT);
@@ -148,7 +146,7 @@ public class ActivitySettings extends Activity {
                     MySettings.setTransAuthMode(ActivitySettings.this, MySettings.Authentication.PIN);
                     break;
                 case R.id.opt_trans_fingerprint:
-                    deviceFingerprintStatus = MyDevice.fingerprintStatus(ActivitySettings.this) ;
+                    deviceFingerprintStatus = MyDevice.fingerprintStatus(ActivitySettings.this);
                     switch (deviceFingerprintStatus) {
                         case MyDevice.FingerprintStatus.HARDWARE_SUPPORTED_AND_SET:
                             MySettings.setTransAuthMode(ActivitySettings.this, MySettings.Authentication.FINGER_PRINT);
@@ -168,5 +166,5 @@ public class ActivitySettings extends Activity {
                     }
             }
         }
-    } ;
+    };
 }
