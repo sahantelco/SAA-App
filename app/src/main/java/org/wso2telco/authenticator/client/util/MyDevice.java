@@ -31,12 +31,14 @@ import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
 import org.wso2telco.authenticator.client.R;
+import org.wso2telco.authenticator.client.server.ServerAPI;
 
 import java.security.KeyStore;
 import java.security.MessageDigest;
@@ -44,7 +46,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
 import javax.crypto.KeyGenerator;
-
 
 public class MyDevice {
 
@@ -134,6 +135,35 @@ public class MyDevice {
         return SIM_Present;
     }
 
+    /**
+     * Check the Service Provider supports Mobile connect.
+     *
+     * @param context
+     */
+    public static boolean isSIMSupportMobileConnect(Context context) {
+
+        boolean SIM_SupportMC = false;
+        TelephonyManager telMgr = getTelephonyManagerService(context);
+        String networkOperator = telMgr.getNetworkOperator();
+
+        if (!TextUtils.isEmpty(networkOperator)) {
+            int mcc = Integer.parseInt(networkOperator.substring(0, 3));
+            if (ServerAPI.HNI_MCC.contains(mcc)) {
+                int mnc = Integer.parseInt(networkOperator.substring(3));
+                if (ServerAPI.HNI_MNC.contains(mnc)) {
+                    SIM_SupportMC = true;
+                }
+            }
+        }
+        return SIM_SupportMC;
+    }
+
+    /**
+     * get clientDeviceID from the application
+     *
+     * @param context
+     * @return clientDeviceID
+     */
     public static String getClientDeviceID(Context context) {
 
         String clientDeviceId = "";
@@ -145,6 +175,12 @@ public class MyDevice {
         return clientDeviceId;
     }
 
+    /**
+     * get msisdn from the application
+     *
+     * @param context
+     * @return msisdn
+     */
     public static String getMsisdn(Context context) {
 
         String msisdn = "";
@@ -154,6 +190,12 @@ public class MyDevice {
         return msisdn;
     }
 
+    /**
+     * Check whether the Telephony Permissions are granted for the application
+     *
+     * @param activity
+     * @return flag
+     */
     public static boolean isTelephonyPermissionGranted(Activity activity) {
         boolean flag = false;
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
@@ -163,6 +205,12 @@ public class MyDevice {
         return flag;
     }
 
+    /**
+     * Check whether the Internet connection is from a data network
+     *
+     * @param context
+     * @return state
+     */
     public static boolean isInternetConnectedByDataNetwork(Context context) {
         NetworkInfo activeNetwork = getConnectivityManagerService(context).getActiveNetworkInfo();
         boolean state = activeNetwork != null &&
@@ -170,6 +218,12 @@ public class MyDevice {
         return state;
     }
 
+    /**
+     * Check whether the Internet connection is available
+     *
+     * @param context
+     * @return state
+     */
     public static boolean isInternetConnected(Context context) {
         NetworkInfo activeNetwork = getConnectivityManagerService(context).getActiveNetworkInfo();
         boolean state = activeNetwork != null &&
@@ -177,6 +231,12 @@ public class MyDevice {
         return state;
     }
 
+    /**
+     * Check whether the Internet connected and it conncted from a mobile data  network.
+     *
+     * @param context
+     * @return state
+     */
     public static boolean isInternetConnectedAndByDataNetwork(Context context) {
         NetworkInfo activeNetwork = getConnectivityManagerService(context).getActiveNetworkInfo();
         boolean state = activeNetwork != null && activeNetwork.isConnectedOrConnecting() &&
@@ -184,6 +244,12 @@ public class MyDevice {
         return state;
     }
 
+    /**
+     * Check finger print status
+     *
+     * @param context
+     * @return state
+     */
     @TargetApi(Build.VERSION_CODES.M)
     public static int fingerprintStatus(Context context) {
         int status = FingerprintStatus.HARDWARE_NOT_SUPPORTED;

@@ -22,6 +22,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.http.SslError;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.util.Log;
@@ -29,24 +32,54 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.wso2telco.authenticator.client.R;
 import org.wso2telco.authenticator.client.fragment.FingerprintFragment;
 import org.wso2telco.authenticator.client.fragment.PinFragment;
+import org.wso2telco.authenticator.client.oauthconnection.EnvironmentDTO;
 import org.wso2telco.authenticator.client.server.ServerAPI;
 import org.wso2telco.authenticator.client.util.MyDevice;
 import org.wso2telco.authenticator.client.util.MySettings;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 public class ActivityMain extends Activity {
 
     private static final String TAG = "ActivityMain";
     static final int REQUEST_READ_PHONE_STATE = 100;
+    private WebView webView;
+    String endpoint;
 
     TextView tvRegStatus;
     TextView tvRegRetry;
+    String aouthCodeValue;
+    String tokenCodeValue;
+    String userInfo;
 
     public interface Request {
         public static int SETTINGS = 0;
@@ -95,15 +128,17 @@ public class ActivityMain extends Activity {
     private void init() throws JSONException {
         if (!MySettings.isPinCodeSet(this))
             showPinActivity(PinFragment.SECURITY_TYPE_NEW_PIN, Request.INITIAL_PIN_SETTING);
-        else if (!MyDevice.hasSIM(this))
-            showNoSim(View.VISIBLE);
+            //uncomment later
+//        else if (!MyDevice.hasSIM(this))
+//            showNoSim(View.VISIBLE);
+//        else if(!MyDevice.isSIMSupportMobileConnect(this))
+//            showSimNotSupportMC(View.VISIBLE);
         else if (MySettings.getDeviceRegistrationStatus(this) == MySettings.Registration.NOT_REGISTERED) {
             if (!MyDevice.isInternetConnectedAndByDataNetwork(this))
                 showNoMobileData(View.VISIBLE);
             else {
                 showDeviceRegistration(View.VISIBLE);
             }
-
         } else if (!MyDevice.isInternetConnected(this))
             showNoInternet(View.VISIBLE);
         else {
@@ -169,6 +204,11 @@ public class ActivityMain extends Activity {
         findViewById(R.id.overlay_no_sim).setVisibility(visibility);
     }
 
+    private void showSimNotSupportMC(int visibility) {
+        findViewById(R.id.overlay_no_sim_support_mc).setVisibility(visibility);
+        showToast(R.string.no_sim_supportMC);
+    }
+
     private void showNoMobileData(int visibility) {
         findViewById(R.id.overlay_no_mobiledata).setVisibility(visibility);
     }
@@ -229,18 +269,62 @@ public class ActivityMain extends Activity {
     }
 
     public void onClickRetryRegistration(View v) throws JSONException {
-        if (tvRegRetry.getVisibility() == View.VISIBLE)
+        if (tvRegRetry.getVisibility() == View.VISIBLE) {
+            tvRegStatus.setText(R.string.registering);
+            blink(tvRegStatus);
             registerDeviceWithCheck();
+        }
     }
 
     private void registerDeviceWithCheck() throws JSONException {
 
-        /////////
-
+        endpoint = getMyUrl();
+        Log.d("EndPoint", endpoint);
+        webView = (WebView) findViewById(R.id.webview01);
         tvRegStatus = (TextView) findViewById(R.id.txtRegistrationStatus);
         tvRegRetry = (TextView) findViewById(R.id.txtRegistrationRetry);
         tvRegRetry.setVisibility(View.GONE);
         tvRegStatus.setText(R.string.registering);
+
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.setWebViewClient(new WebViewClient() {
+
+            @SuppressWarnings("deprecation")
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                try {
+                    Log.d("WebView URL", url);
+                    view.loadUrl(url);
+                    if (view.getUrl().contains("playground2") && view.getUrl().contains("&code=")) {
+
+                        aouthCodeValue = getAouthCodeFromUrl(view.getUrl());
+                        Log.d("Aouth Code value", aouthCodeValue);
+
+                        TokenRequest tokenTask = new TokenRequest();
+                        if (Build.VERSION.SDK_INT >= 11)
+                            tokenTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        else
+                            tokenTask.execute();
+
+                    } else
+                        return false;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return true;
+            }
+
+            @Override
+            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                handler.proceed();
+            }
+
+        });
+
+        webView.clearCache(true);
+        webView.clearHistory();
+        webView.loadUrl(endpoint);
+
         String deviceId = MySettings.getClientDeviceId(this);
         String pushToken = MySettings.getDevicePushToken(this);
         String platform = MySettings.getDevicePlatform(this);
@@ -266,14 +350,13 @@ public class ActivityMain extends Activity {
     private void registerDevice(String deviceId, String pushToken, String platform)
             throws
             JSONException {
-        //String strMSISDN = MySettings.getMSISDN(this);
         ServerAPI.getInstance(this).register(deviceId, pushToken, platform, new ServerAPI.ResponseListener() {
             @Override
             public void onSuccess() throws JSONException {
                 Log.e("onSuccess", "Activitymain");
                 showDeviceRegistration(View.GONE);
                 MySettings.setDeviceRegistrationStatus(getBaseContext(), MySettings.Registration.REGISTERED);
-                open("Your smart phone authenticator has been sucesfully enrolled. It will run in" +
+                notifyUserAndGoBackground("Your smart phone authenticator has been sucesfully enrolled. It will run in" +
                         " the background");
             }
 
@@ -281,10 +364,11 @@ public class ActivityMain extends Activity {
             public void onFailure(String reason) {
                 Log.e("onFailure", "Activitymain");
                 tvRegStatus.clearAnimation();
-                if (reason.equalsIgnoreCase("Device Already registered"))
+                if (reason.equalsIgnoreCase("Device Already registered")) {
                     tvRegStatus.setText(R.string.alredy_registered);
-                else if (reason.equalsIgnoreCase("Error in Registration"))
+                } else if (reason.equalsIgnoreCase("Error in Registration")) {
                     tvRegStatus.setText(R.string.registration_error);
+                }
                 tvRegRetry.setVisibility(View.VISIBLE);
             }
         });
@@ -310,7 +394,7 @@ public class ActivityMain extends Activity {
     }
 
     //Open alert dialog box
-    public void open(String message) {
+    public void notifyUserAndGoBackground(String message) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage(message);
         alertDialogBuilder.setPositiveButton("Ok",
@@ -324,11 +408,176 @@ public class ActivityMain extends Activity {
         alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                finish();
+
             }
         });
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    private String getMyUrl() {
+        String scope = EnvironmentDTO.scope;
+        if (scope.contains("openid")) {
+            //String url = EnvironmentDTO.getOpenidEndpoint() + "&scope=" + scope +"&redirect_uri=" + EnvironmentDTO.getCallBackUrl() + "&client_id=" + EnvironmentDTO.getClientID();
+            String url = EnvironmentDTO.getOpenidEndpoint();
+            return url;
+        }
+        return null;
+    }
+
+    private String getAouthCodeFromUrl(String url) {
+        String[] params = url.split("&code=");
+        return params[1];
+    }
+
+    private class TokenRequest extends AsyncTask<Void, Void, String> {
+
+        HttpResponse response;
+
+        protected String doInBackground(Void... params) {
+            String tokenUrl = EnvironmentDTO.getTokenEndpoint() + aouthCodeValue;
+
+            DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
+            SSLContext ctx = null;
+            try {
+                ctx = SSLContext.getInstance("TLS");
+                ctx.init(null, new TrustManager[]{
+                        new X509TrustManager() {
+                            public void checkClientTrusted(X509Certificate[] chain, String authType) {
+                            }
+
+                            public void checkServerTrusted(X509Certificate[] chain, String authType) {
+                            }
+
+                            public X509Certificate[] getAcceptedIssuers() {
+                                return new X509Certificate[]{};
+                            }
+                        }
+                }, null);
+
+                HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+                    public boolean verify(String hostname, SSLSession session) {
+                        return true;
+                    }
+                });
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (KeyManagementException e) {
+                e.printStackTrace();
+            }
+
+            HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());
+            HttpPost httpPost = new HttpPost(tokenUrl);
+            httpPost.addHeader("Authorization", EnvironmentDTO.getAOutherizationHeaderValue());
+            httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            try {
+                response = defaultHttpClient.execute(httpPost);
+                getJsonObject(response);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        protected void onPostExecute(String result) {
+            Log.d("token code", tokenCodeValue);
+            ServerAPI.TOKEN = tokenCodeValue;
+        }
+
+        private void getJsonObject(HttpResponse response) {
+            BufferedReader rd = null;
+            try {
+                rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+            } catch (UnsupportedOperationException e1) {
+                e1.printStackTrace();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+
+            StringBuffer result = new StringBuffer();
+            String line = "";
+            try {
+                while ((line = rd.readLine()) != null) {
+                    result.append(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                JSONObject o = new JSONObject(result.toString());
+                if (o.get("access_token") != null) {
+                    tokenCodeValue = (String) o.get("access_token");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class UserInfoRequest extends AsyncTask<Void, Void, String> {
+        HttpResponse response;
+
+        protected String doInBackground(Void... urls) {
+
+            DefaultHttpClient httpclient = new DefaultHttpClient();
+            HttpGet httpGet = new HttpGet(EnvironmentDTO.getUserInfoEndpoint());
+            httpGet.addHeader("Authorization", "Bearer " + tokenCodeValue);
+            httpGet.addHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            try {
+                response = httpclient.execute(httpGet);
+                getJsonObject(response);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        protected void onPostExecute(String result) {
+            ServerAPI.MSISDN = userInfo;
+        }
+
+        private void getJsonObject(HttpResponse response) {
+            BufferedReader rd = null;
+            try {
+                rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+            } catch (UnsupportedOperationException e1) {
+                e1.printStackTrace();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+
+            StringBuffer result = new StringBuffer();
+            String line = "";
+            try {
+                while ((line = rd.readLine()) != null) {
+                    result.append(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                JSONObject o = new JSONObject(result.toString());
+                userInfo = o.toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

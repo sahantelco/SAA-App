@@ -167,10 +167,4 @@ public class MySettings {
         return getSharedPreferences(context).getBoolean(ACTIVITYOAUTH, false);
     }
 
-    public static void setActivityOAuth(Context context, boolean newValue) {
-        final SharedPreferences.Editor editor = getSharedPreferences(context).edit();
-        editor.putBoolean(ACTIVITYOAUTH, newValue);
-        editor.commit();
-    }
-
 }

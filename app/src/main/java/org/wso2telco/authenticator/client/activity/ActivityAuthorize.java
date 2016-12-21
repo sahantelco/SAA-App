@@ -81,13 +81,18 @@ public class ActivityAuthorize extends FragmentActivity {
                 if (URLUtil.isValidUrl(strSP_URL)) {
                     showImage(strSP_URL);
                 }
-                showAuthenticator(levelOfAssurance, messageId);
+                showAuthenticator(levelOfAssurance);
             } catch (Exception e) {
                 finish();
             }
         }
     }
 
+    /**
+     * Display the Service Provider's icon in the Activity
+     *
+     * @param imgURL
+     */
     private void showImage(String imgURL) {
         imgSP = (ImageView) findViewById(R.id.imgSP);
         ImageRequest imgRequest = new ImageRequest(imgURL,
@@ -107,23 +112,23 @@ public class ActivityAuthorize extends FragmentActivity {
     }
 
     public void onClickCancelTransaction(View v) {
-        setAuthenticationStatus(ServerAPI.Athentication.FAILED);
+        setAuthenticationStatus(ServerAPI.Athentication.FAILED, ServerAPI.RequestStatus.REJECTED);
     }
 
-    public void showAuthenticator(int acr, String sessionDataKey) {
+    public void showAuthenticator(int acr) {
         switch (acr) {
             case LOA.Level2:
-                showSwipeAuthenticator(sessionDataKey);
+                showSwipeAuthenticator();
                 break;
             case LOA.Level3:
                 String AUTH_MODE = MySettings.getTransAuthMode(this);
                 if (AUTH_MODE.equals(MySettings.Authentication.FINGER_PRINT)) {
                     if (MyDevice.fingerprintStatus(this) == MyDevice.FingerprintStatus.HARDWARE_SUPPORTED_AND_SET)
-                        showFingerprintAuthenticator(sessionDataKey);
+                        showFingerprintAuthenticator();
                     else
-                        showPinAuthenticator(sessionDataKey);
+                        showPinAuthenticator();
                 } else
-                    showPinAuthenticator(sessionDataKey);
+                    showPinAuthenticator();
                 break;
         }
     }
@@ -137,7 +142,7 @@ public class ActivityAuthorize extends FragmentActivity {
         vwAuthPin.setVisibility(View.GONE);
     }
 
-    public void showSwipeAuthenticator(final String sessionDataKey) {
+    public void showSwipeAuthenticator() {
         hideAllAuthenticators();
 
         View vwAuthSwipe = findViewById(R.id.authSwipe);
@@ -146,43 +151,16 @@ public class ActivityAuthorize extends FragmentActivity {
         Button btnSwipe = (Button) findViewById(R.id.btnSwipe);
         btnSwipe.setOnTouchListener(new OnSwipeTouchListener(ActivityAuthorize.this) {
             public void onSwipeRight() {
-                setAuthenticationStatus(ServerAPI.Athentication.SUCCESS);
-                ServerAPI.getInstance(context).updateAdapter("APPROVED", sessionDataKey, new ServerAPI.ResponseListener() {
-                    @Override
-                    public void onSuccess() throws JSONException {
-                        Log.e("onSuccess", "ONSwipeRight");
-                    }
-
-                    @Override
-                    public void onFailure(String reason) {
-                        Log.e("onFailure", "ONSwipeRight");
-
-                    }
-                });
-                finish();
+                setAuthenticationStatus(ServerAPI.Athentication.SUCCESS, ServerAPI.RequestStatus.APPROVED);
             }
 
             public void onSwipeLeft() {
-                setAuthenticationStatus(ServerAPI.Athentication.SUCCESS);
-                ServerAPI.getInstance(context).updateAdapter("APPROVED", sessionDataKey, new ServerAPI.ResponseListener() {
-                    @Override
-                    public void onSuccess() throws JSONException {
-                        Log.e("onSuccess", "OnSwipeLeft");
-                    }
-
-                    @Override
-                    public void onFailure(String reason) {
-                        Log.e("onFailure", "OnSwipeLeft");
-
-                    }
-                });
-                finish();
+                setAuthenticationStatus(ServerAPI.Athentication.SUCCESS, ServerAPI.RequestStatus.APPROVED);
             }
         });
     }
 
-    public void showPinAuthenticator(String sessionDataKey) {
-        final String sessionDataKeyValue = sessionDataKey;
+    public void showPinAuthenticator() {
         hideAllAuthenticators();
 
         View vwAuthPin = findViewById(R.id.authPin);
@@ -192,65 +170,25 @@ public class ActivityAuthorize extends FragmentActivity {
         pinFragment.setPinListener(new PinFragment.PinListener() {
             @Override
             public void onSuccess(int mode) {
-                setAuthenticationStatus(ServerAPI.Athentication.SUCCESS);
+                setAuthenticationStatus(ServerAPI.Athentication.SUCCESS, ServerAPI.RequestStatus.APPROVED);
                 setResult(Activity.RESULT_OK);
-                ServerAPI.getInstance(context).updateAdapter("APPROVED", sessionDataKeyValue, new ServerAPI.ResponseListener() {
-                    @Override
-                    public void onSuccess() throws JSONException {
-                        Log.e("onSuccess", "Pin Authentication");
-                    }
-
-                    @Override
-                    public void onFailure(String reason) {
-                        Log.e("onFailure", "Pin Authentication");
-
-                    }
-                });
-                finish();
             }
 
             @Override
             public void onAttemptExceed(int mode) {
-                setAuthenticationStatus(ServerAPI.Athentication.FAILED);
-                ServerAPI.getInstance(context).updateAdapter("REJECTED", sessionDataKeyValue, new ServerAPI.ResponseListener() {
-                    @Override
-                    public void onSuccess() throws JSONException {
-                        Log.e("onSuccess", "Pin Authentication");
-                    }
-
-                    @Override
-                    public void onFailure(String reason) {
-                        Log.e("onFailure", "Pin Authentication");
-
-                    }
-                });
                 setResult(Activity.RESULT_CANCELED);
-                finish();
+                setAuthenticationStatus(ServerAPI.Athentication.FAILED, ServerAPI.RequestStatus.REJECTED);
             }
 
             @Override
             public void onDataNotFound() {
-                setAuthenticationStatus(ServerAPI.Athentication.FAILED);
-                ServerAPI.getInstance(context).updateAdapter("REJECTED", sessionDataKeyValue, new ServerAPI.ResponseListener() {
-                    @Override
-                    public void onSuccess() throws JSONException {
-                        Log.e("onSuccess", "Pin Authentication");
-                    }
-
-                    @Override
-                    public void onFailure(String reason) {
-                        Log.e("onFailure", "Pin Authentication");
-
-                    }
-                });
                 setResult(Activity.RESULT_CANCELED);
-                finish();
+                setAuthenticationStatus(ServerAPI.Athentication.FAILED, ServerAPI.RequestStatus.REJECTED);
             }
         });
     }
 
-    public void showFingerprintAuthenticator(final String sessionDataKey) {
-        final String sessionDataKeyValue = sessionDataKey;
+    public void showFingerprintAuthenticator() {
         hideAllAuthenticators();
         View vwAuthFingerprint = findViewById(R.id.authFingerprint);
         vwAuthFingerprint.setVisibility(View.VISIBLE);
@@ -259,52 +197,30 @@ public class ActivityAuthorize extends FragmentActivity {
         fingerprintFragment.setFingerListener(new FingerprintFragment.FingerprintListener() {
             @Override
             public void onChangeAuthenticationPin() {
-                showPinAuthenticator(sessionDataKey);
+                showPinAuthenticator();
             }
 
             @Override
             public void onSuccess() {
-                setAuthenticationStatus(ServerAPI.Athentication.SUCCESS);
-                ServerAPI.getInstance(context).updateAdapter("APPROVED", sessionDataKeyValue, new ServerAPI.ResponseListener() {
-                    @Override
-                    public void onSuccess() throws JSONException {
-                        Log.e("onSuccess", "Fingerprint Authentication");
-                    }
-
-                    @Override
-                    public void onFailure(String reason) {
-                        Log.e("onFAilure", "Fingerprint Authentication");
-
-                    }
-                });
                 setResult(Activity.RESULT_OK);
-                finish();
+                setAuthenticationStatus(ServerAPI.Athentication.SUCCESS, ServerAPI.RequestStatus.APPROVED);
             }
 
             @Override
             public void onAttemptExceed() {
-                setAuthenticationStatus(ServerAPI.Athentication.FAILED);
-                ServerAPI.getInstance(context).updateAdapter("REJECTED", sessionDataKeyValue, new ServerAPI.ResponseListener() {
-                    @Override
-                    public void onSuccess() throws JSONException {
-                        Log.e("onSuccess", "Fingerprint Authentication");
-                    }
-
-                    @Override
-                    public void onFailure(String reason) {
-                        Log.e("onFAilure", "Fingerprint Authentication");
-
-                    }
-                });
                 setResult(Activity.RESULT_CANCELED);
-                finish();
+                setAuthenticationStatus(ServerAPI.Athentication.FAILED, ServerAPI.RequestStatus.REJECTED);
             }
-
         });
     }
 
-
-    public void setAuthenticationStatus(int status) {
+    /**
+     * Update the SAA Server and SAA Adapter after the user do a transaction
+     *
+     * @param status       to update the SAA Server
+     * @param updateStatus to update the SAA Adapter
+     */
+    public void setAuthenticationStatus(int status, final String updateStatus) {
         String strMSISDN = "911111111111";
         Log.d("msisdn at setAuthen", strMSISDN);
 
@@ -312,22 +228,22 @@ public class ActivityAuthorize extends FragmentActivity {
         ServerAPI.getInstance(this).setAuthenticationStatus(strMSISDN, status, messageId, new ServerAPI.ResponseListener() {
             @Override
             public void onSuccess() throws JSONException {
-//                Log.e("onSuccess", "Activitymain");
-//                open("Authentication complete");
-            }
+                Log.e("onSuccess", "Activitymain");
+                // Calling SAA Adapter to update the transaction status as cancelled.
+                ServerAPI.getInstance(context).updateAdapter(updateStatus, messageId, new ServerAPI.ResponseListener
+                        () {
+                    @Override
+                    public void onSuccess() throws JSONException {
+                        Log.e("onSuccess", "On cancel");
+                        notifyUserAndGoBackground("Authentication complete");
+                    }
 
-            @Override
-            public void onFailure(String reason) {
-                Log.e("Fail Authentication", reason);
-            }
-        });
-
-        //Calling SAA Adapter to update the transaction status as cancelled.
-        ServerAPI.getInstance(context).updateAdapter("REJECTED", messageId, new ServerAPI.ResponseListener() {
-            @Override
-            public void onSuccess() throws JSONException {
-                Log.e("onSuccess", "On cancel");
-                notifyUserAndGoBackground("Authentication complete");
+                    @Override
+                    public void onFailure(String reason) {
+                        Log.e("onFailure", "On cancel");
+                        notifyUserAndGoBackground("Server Error");
+                    }
+                });
             }
 
             @Override
@@ -338,6 +254,11 @@ public class ActivityAuthorize extends FragmentActivity {
         });
     }
 
+    /**
+     * Dispaly the dialog box after the transaction authorized.
+     *
+     * @param message
+     */
     public void notifyUserAndGoBackground(String message) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage(message);
@@ -352,7 +273,7 @@ public class ActivityAuthorize extends FragmentActivity {
         alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                finish();
             }
         });
         AlertDialog alertDialog = alertDialogBuilder.create();

@@ -37,6 +37,7 @@
     <string name="error_not_supported_finger_print">No finger print hardware supported </string>
     <string name="success_change_pin">successfully changed pin no</string>
     <string name="no_sim">SIM not found</string>
+    <string name="no_sim_supportMC">Service Provider does not support Mobile Connect</string>
     <string name="no_internet">Internet not connected</string>
     <string name="no_mobile_data">Cellular data not connected</string>
     <string name="retry">Retry</string>

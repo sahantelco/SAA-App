@@ -20,12 +20,21 @@
     <include android:id="@+id/overlay_no_sim" layout="@layout/overlay_no_sim" android:visibility="gone" />
     <include android:id="@+id/overlay_no_internet" layout="@layout/overlay_no_internet" android:visibility="gone" />
     <include android:id="@+id/overlay_device_registration" layout="@layout/overlay_device_registration" android:visibility="gone" />
+    <include android:id="@+id/overlay_no_sim_support_mc" layout="@layout/overlay_no_sim_support_mc" android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/activity_authentication"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/lightBlue">
+
+        <WebView
+            android:id="@+id/webview01"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_weight="1"
+            android:visibility="gone">
+        </WebView>
 
         <TextView
             android:text="@string/waiting_for_authorization"
@@ -36,6 +45,7 @@
             android:id="@+id/txtAwaiting"
             android:textColor="@android:color/white"
             android:fontFamily="sans-serif-condensed"
+            android:layout_gravity="center_horizontal"
             android:textSize="16dp"/>
 
         <LinearLayout

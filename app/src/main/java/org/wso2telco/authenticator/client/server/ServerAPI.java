@@ -33,26 +33,29 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wso2telco.authenticator.client.oauthconnection.EnvironmentDTO;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ServerAPI {
 
     public static String TOKEN;
+    public static String MSISDN;
     private static ServerAPI mInstance;
     private static Context mCtx;
     private final String API_ERROR = "API Error";
     private final String NETWORK_ERROR = "Network Error";
-    private final String STATUS = "status";
-    private final String MESSAGE_ID = "ref";
     private String END_POINT = "http://10.10.12.38:9763/SAA_Authenticator_v1.0/services/serverAPI/";
     //private String END_POINT = "http://sandbox.mconnect.wso2telco.com/SAA_Authenticator_v1.0/services/serverAPI/";
-    // private String END_POINT = "http://sandbox.mconnect.wso2telco.com/SAA_Authenticator_v1" +"
-    // .0/services/serverAPI/";
     //private String END_POINT ="http://192.168.8.103:9763/SAA_Authenticator_v1.0/services/serverAPI/";
 
     private RequestQueue mRequestQueue;
     private ResponseListener responseListener;
+
+    //MCC and MNC values of the service providers who supports Mobile Connect.
+    public static List<Integer> HNI_MCC = Arrays.asList(413);
+    public static List<Integer> HNI_MNC = Arrays.asList(2);
 
     public ServerAPI(Context context) {
         mCtx = context;
@@ -108,7 +111,6 @@ public class ServerAPI {
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
                 url, params,
                 new Response.Listener<JSONObject>() {
-
 
                     @Override
                     public void onResponse(JSONObject response) {
@@ -269,6 +271,11 @@ public class ServerAPI {
     public interface Athentication {
         public static int SUCCESS = 1;
         public static int FAILED = 0;
+    }
+
+    public interface RequestStatus {
+        public static String APPROVED = "APPROVED";
+        public static String REJECTED = "REJECTED";
     }
 
     public interface ResponseListener {
