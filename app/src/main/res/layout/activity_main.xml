@@ -28,14 +28,6 @@
         android:layout_height="match_parent"
         android:background="@color/lightBlue">
 
-        <WebView
-            android:id="@+id/webview01"
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-            android:layout_weight="1"
-            android:visibility="gone">
-        </WebView>
-
         <TextView
             android:text="@string/waiting_for_authorization"
             android:layout_width="wrap_content"
@@ -86,6 +78,7 @@
                 android:layout_margin="10dp"
                 android:visibility="gone"
                 />
+
         </LinearLayout>
 
         <Button

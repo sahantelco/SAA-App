@@ -41,4 +41,12 @@
         android:textSize="16dp"
         />
 
+    <WebView
+        android:id="@+id/webview01"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:visibility="gone"
+        >
+    </WebView>
+
 </RelativeLayout>

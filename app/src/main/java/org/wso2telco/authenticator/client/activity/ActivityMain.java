@@ -68,6 +68,8 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import static android.view.View.VISIBLE;
+
 public class ActivityMain extends Activity {
 
     private static final String TAG = "ActivityMain";
@@ -77,8 +79,8 @@ public class ActivityMain extends Activity {
 
     TextView tvRegStatus;
     TextView tvRegRetry;
-    String aouthCodeValue;
-    String tokenCodeValue;
+    String aouthCodeValue = null;
+    String tokenCodeValue = null;
     String userInfo;
 
     public interface Request {
@@ -135,12 +137,12 @@ public class ActivityMain extends Activity {
 //            showSimNotSupportMC(View.VISIBLE);
         else if (MySettings.getDeviceRegistrationStatus(this) == MySettings.Registration.NOT_REGISTERED) {
             if (!MyDevice.isInternetConnectedAndByDataNetwork(this))
-                showNoMobileData(View.VISIBLE);
+                showNoMobileData(VISIBLE);
             else {
-                showDeviceRegistration(View.VISIBLE);
+                showDeviceRegistration(VISIBLE);
             }
         } else if (!MyDevice.isInternetConnected(this))
-            showNoInternet(View.VISIBLE);
+            showNoInternet(VISIBLE);
         else {
             Log.e("PushTokenMain", MySettings.getDevicePushToken(this));
             waitForAuthorization();
@@ -264,12 +266,14 @@ public class ActivityMain extends Activity {
 
     private void showDeviceRegistration(int visibility) throws JSONException {
         findViewById(R.id.overlay_device_registration).setVisibility(visibility);
-        if (View.VISIBLE == visibility)
+        Log.d("call1","Calling first");
+        if (VISIBLE == visibility)
             registerDeviceWithCheck();
     }
 
     public void onClickRetryRegistration(View v) throws JSONException {
-        if (tvRegRetry.getVisibility() == View.VISIBLE) {
+        Log.d("call2","Calling second");
+        if (tvRegRetry.getVisibility() == VISIBLE) {
             tvRegStatus.setText(R.string.registering);
             blink(tvRegStatus);
             registerDeviceWithCheck();
@@ -285,68 +289,200 @@ public class ActivityMain extends Activity {
         tvRegRetry = (TextView) findViewById(R.id.txtRegistrationRetry);
         tvRegRetry.setVisibility(View.GONE);
         tvRegStatus.setText(R.string.registering);
+        blink(tvRegStatus);
+        final String deviceId = MySettings.getClientDeviceId(this);
+        final String pushToken = MySettings.getDevicePushToken(this);
+        final String platform = MySettings.getDevicePlatform(this);
+        final String msisdn = MyDevice.getMsisdn(this);
+//
+//        webView.getSettings().setJavaScriptEnabled(true);
+//        webView.getSettings().setDomStorageEnabled(true);
+//        webView.setWebViewClient(new WebViewClient() {
+//
+//            @SuppressWarnings("deprecation")
+//            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+//                view.setVisibility(View.GONE);
+//                try {
+//                    view.setVisibility(View.GONE);
+//                    Log.d("WebView URL", url);
+//                    view.loadUrl(url);
+//
+//                    if (view.getUrl().contains("preprod/authenticationendpoint/login.do")&& view.getUrl().contains("authenticators=MSISDNAuthenticator:LOCAL")){
+//                        view.setVisibility(View.VISIBLE);
+//                    }
+//
+//                    if (view.getUrl().contains("playground2") && view.getUrl().contains("&code=")) {
+//
+//                        aouthCodeValue = getAouthCodeFromUrl(view.getUrl());
+//                        Log.d("Aouth Code value", aouthCodeValue);
+//
+//                        TokenRequest tokenTask = new TokenRequest();
+//                        if (Build.VERSION.SDK_INT >= 11)
+//                            tokenTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//                        else
+//                            tokenTask.execute();
+//
+//                        check();
+//
+//                    } else
+//                        return false;
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                return true;
+//            }
+//
+//            @Override
+//            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+//                handler.proceed();
+//            }
+//
+//        });
+//
+//        webView.clearCache(true);
+//        webView.clearHistory();
+//        webView.loadUrl(endpoint);
 
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setDomStorageEnabled(true);
-        webView.setWebViewClient(new WebViewClient() {
 
-            @SuppressWarnings("deprecation")
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                try {
-                    Log.d("WebView URL", url);
-                    view.loadUrl(url);
-                    if (view.getUrl().contains("playground2") && view.getUrl().contains("&code=")) {
+//
+//
+//        if (MyDevice.isTelephonyPermissionGranted(this)) {
+//            if(tokenCodeValue == null){
+//                //registerDeviceWithCheck();
+//            }
+//            else {
+//                if (!pushToken.isEmpty())
+//                    registerDevice(deviceId, pushToken, platform);
+//                else {
+//                    tvRegStatus.clearAnimation();
+//                    tvRegStatus.setText(R.string.pushtoken_not_found);
+//                    tvRegRetry.setVisibility(VISIBLE);
+//                }
+//            }
+//
+//        } else {
+//            tvRegStatus.clearAnimation();
+//            tvRegStatus.setText(R.string.no_permission);
+//            tvRegRetry.setVisibility(VISIBLE);
+//        }
 
-                        aouthCodeValue = getAouthCodeFromUrl(view.getUrl());
-                        Log.d("Aouth Code value", aouthCodeValue);
+        ////////////////////////////////uncomment above///////////////////////////////
 
-                        TokenRequest tokenTask = new TokenRequest();
-                        if (Build.VERSION.SDK_INT >= 11)
-                            tokenTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                        else
-                            tokenTask.execute();
+        if (MyDevice.isTelephonyPermissionGranted(this)) {
+               if (!pushToken.isEmpty()){
 
-                    } else
-                        return false;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return true;
-            }
+                   endpoint = getMyUrl();
+                   Log.d("EndPoint", endpoint);
+                   webView = (WebView) findViewById(R.id.webview01);
+                   tvRegStatus = (TextView) findViewById(R.id.txtRegistrationStatus);
+                   tvRegRetry = (TextView) findViewById(R.id.txtRegistrationRetry);
+                   tvRegRetry.setVisibility(View.GONE);
+                   tvRegStatus.setText(R.string.registering);
+                   blink(tvRegStatus);
 
-            @Override
-            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                handler.proceed();
-            }
+                   webView.getSettings().setJavaScriptEnabled(true);
+                   webView.getSettings().setDomStorageEnabled(true);
+                   webView.setWebViewClient(new WebViewClient() {
 
-        });
+                       @SuppressWarnings("deprecation")
+                       public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                           view.setVisibility(View.GONE);
+                           try {
+                               view.setVisibility(View.GONE);
+                               Log.d("WebView URL", url);
+                               view.loadUrl(url);
 
-        webView.clearCache(true);
-        webView.clearHistory();
-        webView.loadUrl(endpoint);
+                               if (view.getUrl().contains("preprod/authenticationendpoint/login.do")&& view.getUrl().contains("authenticators=MSISDNAuthenticator:LOCAL")){
+                                   view.setVisibility(View.VISIBLE);
+                               }
 
+                               if (view.getUrl().contains("playground2") && view.getUrl().contains("&code=")) {
+
+                                   aouthCodeValue = getAouthCodeFromUrl(view.getUrl());
+                                   Log.d("Aouth Code value", aouthCodeValue);
+
+                                   TokenRequest tokenTask = new TokenRequest();
+                                   if (Build.VERSION.SDK_INT >= 11)
+                                       tokenTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                   else
+                                       tokenTask.execute();
+
+                                   //registerDevice(deviceId, pushToken, platform);
+
+                               } else
+                                   return true;
+                           } catch (Exception e) {
+                               e.printStackTrace();
+                           }
+                           return true;
+                       }
+
+                       @Override
+                       public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                           handler.proceed();
+                       }
+
+                   });
+
+                   webView.clearCache(true);
+                   webView.clearHistory();
+                   webView.loadUrl(endpoint);
+
+
+                   if(ServerAPI.TOKEN !=null) {
+                       Log.d("token code", " not null");
+                       try {
+                           registerDevice(deviceId, pushToken, platform);
+                       } catch (JSONException e) {
+                           e.printStackTrace();
+                       }
+                   }
+                   else
+                       Log.d("token code","null");
+
+               }
+               else {
+                    tvRegStatus.clearAnimation();
+                    tvRegStatus.setText(R.string.pushtoken_not_found);
+                    tvRegRetry.setVisibility(VISIBLE);
+               }
+        } else {
+            tvRegStatus.clearAnimation();
+            tvRegStatus.setText(R.string.no_permission);
+            tvRegRetry.setVisibility(VISIBLE);
+       }
+
+    }
+    //////////////////////////////////////////remove.just to check//////////////////////////////////
+    private void check() throws JSONException {
         String deviceId = MySettings.getClientDeviceId(this);
         String pushToken = MySettings.getDevicePushToken(this);
         String platform = MySettings.getDevicePlatform(this);
         String msisdn = MyDevice.getMsisdn(this);
 
-        blink(tvRegStatus);
 
         if (MyDevice.isTelephonyPermissionGranted(this)) {
-            if (!pushToken.isEmpty())
-                registerDevice(deviceId, pushToken, platform);
-            else {
-                tvRegStatus.clearAnimation();
-                tvRegStatus.setText(R.string.pushtoken_not_found);
-                tvRegRetry.setVisibility(View.VISIBLE);
+            if(tokenCodeValue == null){
+                registerDeviceWithCheck();
             }
+            else {
+                if (!pushToken.isEmpty())
+                    registerDevice(deviceId, pushToken, platform);
+                else {
+                    tvRegStatus.clearAnimation();
+                    tvRegStatus.setText(R.string.pushtoken_not_found);
+                    tvRegRetry.setVisibility(VISIBLE);
+                }
+            }
+
         } else {
             tvRegStatus.clearAnimation();
             tvRegStatus.setText(R.string.no_permission);
-            tvRegRetry.setVisibility(View.VISIBLE);
+            tvRegRetry.setVisibility(VISIBLE);
         }
     }
 
+    /////////////////////////////////////////////////////////////////////////////////////////
     private void registerDevice(String deviceId, String pushToken, String platform)
             throws
             JSONException {
@@ -369,7 +505,7 @@ public class ActivityMain extends Activity {
                 } else if (reason.equalsIgnoreCase("Error in Registration")) {
                     tvRegStatus.setText(R.string.registration_error);
                 }
-                tvRegRetry.setVisibility(View.VISIBLE);
+                tvRegRetry.setVisibility(VISIBLE);
             }
         });
     }
@@ -469,7 +605,7 @@ public class ActivityMain extends Activity {
 
             HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());
             HttpPost httpPost = new HttpPost(tokenUrl);
-            httpPost.addHeader("Authorization", EnvironmentDTO.getAOutherizationHeaderValue());
+            httpPost.addHeader("Authorization", EnvironmentDTO.getOautherizationHeaderValue());
             httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
 
             try {

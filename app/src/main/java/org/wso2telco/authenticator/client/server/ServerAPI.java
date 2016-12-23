@@ -46,8 +46,9 @@ public class ServerAPI {
     private static Context mCtx;
     private final String API_ERROR = "API Error";
     private final String NETWORK_ERROR = "Network Error";
-    private String END_POINT = "http://10.10.12.38:9763/SAA_Authenticator_v1.0/services/serverAPI/";
-    //private String END_POINT = "http://sandbox.mconnect.wso2telco.com/SAA_Authenticator_v1.0/services/serverAPI/";
+    //private String END_POINT = "http://10.10.12.38:9763/SAA_Authenticator_v1" +
+     //       ".0/services/serverAPI/";
+    private String END_POINT = "http://sandbox.mconnect.wso2telco.com/SAA_Authenticator_v1.0/services/serverAPI/";
     //private String END_POINT ="http://192.168.8.103:9763/SAA_Authenticator_v1.0/services/serverAPI/";
 
     private RequestQueue mRequestQueue;
@@ -219,7 +220,7 @@ public class ServerAPI {
      */
     public void updateAdapter(final String status, final String ref, final ResponseListener responseListener) {
 
-        String url = EnvironmentDTO.updatestatus_url;
+        String url = EnvironmentDTO.getupdatestatusUrl();
         Log.d("Session data key", ref);
 
         JSONObject params = new JSONObject();
