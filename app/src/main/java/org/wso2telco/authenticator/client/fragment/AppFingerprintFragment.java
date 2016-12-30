@@ -1,3 +1,4 @@
+
 /* ******************************************************************************************
  *
  * Copyright (c) 2016-2017, WSO2.Telco Inc. (http://wso2telco.com/) All Rights Reserved.
@@ -17,28 +18,28 @@
 
 package org.wso2telco.authenticator.client.fragment;
 
-import android.annotation.TargetApi;
-import android.hardware.fingerprint.FingerprintManager;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+        import android.annotation.TargetApi;
+        import android.hardware.fingerprint.FingerprintManager;
+        import android.os.Build;
+        import android.os.Bundle;
+        import android.support.v4.app.Fragment;
+        import android.view.LayoutInflater;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.view.animation.AlphaAnimation;
+        import android.view.animation.Animation;
+        import android.widget.Button;
+        import android.widget.LinearLayout;
+        import android.widget.RelativeLayout;
+        import android.widget.TextView;
 
 
-import org.wso2telco.authenticator.client.R;
-import org.wso2telco.authenticator.client.fingerprint.FingerprintHelper;
+        import org.wso2telco.authenticator.client.R;
+        import org.wso2telco.authenticator.client.fingerprint.FingerprintHelper;
 
 
 @TargetApi(Build.VERSION_CODES.M)
-public class FingerprintFragment extends Fragment
+public class AppFingerprintFragment extends Fragment
         implements FingerprintHelper.Callback {
 
     private Button btnChangeAuthenticationPin;
@@ -57,7 +58,7 @@ public class FingerprintFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_trans_fingerprint, container, false);
+        return inflater.inflate(R.layout.fragment_fingerprint, container, false);
     }
 
     @Override
@@ -105,7 +106,7 @@ public class FingerprintFragment extends Fragment
         layoutError.setVisibility(View.VISIBLE);
     }
 
-    public void setFingerListener(FingerprintFragment.FingerprintListener fingerprintListener) {
+    public void setFingerListener(AppFingerprintFragment.FingerprintListener fingerprintListener) {
         this.fingerprintListener = fingerprintListener;
     }
 

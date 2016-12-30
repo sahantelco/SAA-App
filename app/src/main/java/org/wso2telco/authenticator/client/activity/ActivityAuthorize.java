@@ -27,11 +27,13 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.TextView;
-
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
@@ -40,6 +42,7 @@ import org.json.JSONException;
 import org.wso2telco.authenticator.client.R;
 import org.wso2telco.authenticator.client.fragment.FingerprintFragment;
 import org.wso2telco.authenticator.client.fragment.PinFragment;
+import org.wso2telco.authenticator.client.oauthconnection.EnvironmentDTO;
 import org.wso2telco.authenticator.client.server.ServerAPI;
 import org.wso2telco.authenticator.client.util.MyDevice;
 import org.wso2telco.authenticator.client.util.MySettings;
@@ -78,8 +81,9 @@ public class ActivityAuthorize extends FragmentActivity {
                 String strSP_URL = extras.getString(INTENT_SP_URL);
                 messageId = extras.getString(INTENT_MSG_ID);
                 levelOfAssurance = Integer.parseInt(extras.getString(INTENT_LOA));
+                //showImageSP(EnvironmentDTO.serviceproviderURL);
                 if (URLUtil.isValidUrl(strSP_URL)) {
-                    showImage(strSP_URL);
+                    showImageOperator(strSP_URL);
                 }
                 showAuthenticator(levelOfAssurance);
             } catch (Exception e) {
@@ -89,11 +93,34 @@ public class ActivityAuthorize extends FragmentActivity {
     }
 
     /**
+     * Display the Operator's icon in the Activity
+     *
+     * @param imgURL
+     */
+    private void showImageOperator(String imgURL) {
+        imgSP = (ImageView) findViewById(R.id.imgSP);
+        ImageRequest imgRequest = new ImageRequest(imgURL,
+                new Response.Listener<Bitmap>() {
+                    @Override
+                    public void onResponse(Bitmap response) {
+                        imgSP.setImageBitmap(response);
+                    }
+                }, 0, 0, ImageView.ScaleType.FIT_XY, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                imgSP.setBackgroundColor(Color.parseColor("#000000"));
+                error.printStackTrace();
+            }
+        });
+        ServerAPI.getInstance(this).addToRequestQueue(imgRequest);
+    }
+
+    /**
      * Display the Service Provider's icon in the Activity
      *
      * @param imgURL
      */
-    private void showImage(String imgURL) {
+    private void showImageSP(String imgURL) {
         imgSP = (ImageView) findViewById(R.id.imgSP);
         ImageRequest imgRequest = new ImageRequest(imgURL,
                 new Response.Listener<Bitmap>() {
@@ -191,6 +218,7 @@ public class ActivityAuthorize extends FragmentActivity {
     public void showFingerprintAuthenticator() {
         hideAllAuthenticators();
         View vwAuthFingerprint = findViewById(R.id.authFingerprint);
+
         vwAuthFingerprint.setVisibility(View.VISIBLE);
 
         FingerprintFragment fingerprintFragment = (FingerprintFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_fingerprint);
@@ -221,7 +249,7 @@ public class ActivityAuthorize extends FragmentActivity {
      * @param updateStatus to update the SAA Adapter
      */
     public void setAuthenticationStatus(int status, final String updateStatus) {
-        String strMSISDN = "911111111111";
+        String strMSISDN = ServerAPI.MSISDN;
         Log.d("msisdn at setAuthen", strMSISDN);
 
         //Calling SAA Server to update the transaction status as cancelled.
@@ -229,21 +257,21 @@ public class ActivityAuthorize extends FragmentActivity {
             @Override
             public void onSuccess() throws JSONException {
                 Log.e("onSuccess", "Activitymain");
-                // Calling SAA Adapter to update the transaction status as cancelled.
-                ServerAPI.getInstance(context).updateAdapter(updateStatus, messageId, new ServerAPI.ResponseListener
-                        () {
-                    @Override
-                    public void onSuccess() throws JSONException {
-                        Log.e("onSuccess", "On cancel");
-                        notifyUserAndGoBackground("Authentication complete");
-                    }
-
-                    @Override
-                    public void onFailure(String reason) {
-                        Log.e("onFailure", "On cancel");
-                        notifyUserAndGoBackground("Server Error");
-                    }
-                });
+                // Calling SAA Adapter to update the transaction status las cancelled.
+//                ServerAPI.getInstance(context).updateAdapter(updateStatus, messageId, new ServerAPI.ResponseListener
+//                        () {
+//                    @Override
+//                    public void onSuccess() throws JSONException {
+//                        Log.e("onSuccess", "On cancel");
+//                        notifyUserAndGoBackground("Authentication complete");
+//                    }
+//
+//                    @Override
+//                    public void onFailure(String reason) {
+//                        Log.e("onFailure", "On cancel");
+//                        notifyUserAndGoBackground("Server Error");
+//                    }
+//                });
             }
 
             @Override

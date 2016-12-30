@@ -1,6 +1,6 @@
 <resources>
     <!--application_settings-->
-    <string name="app_name">WSO2Telco mConnect</string>
+    <string name="app_name">WSO2 Telco SAA</string>
     <string name="action_settings">Settings</string>
     <string name="sinhala">si</string>
     <string name="tamil">si</string>
@@ -23,7 +23,11 @@
     <string name="load">Loading........</string>
 
     <!--transaction_settings-->
+    <string name="command_fingerprint">Please provide your fingrprint to complete</string>
+    <string name="command_swipe">Please swipe to complete</string>
+    <string name="command_pin">Please provide your pin to complete</string>
     <string name="settings">Settings</string>
+    <string name="transaction_successful">Autherization \n Successfull</string>
     <string name="transaction_setting">Transaction Settings</string>
     <string name="application_setting">Application Settings</string>
     <string name="fingerprint">Fingerprint</string>
@@ -41,15 +45,15 @@
     <string name="no_internet">Internet not connected</string>
     <string name="no_mobile_data">Cellular data not connected</string>
     <string name="retry">Retry</string>
-    <string name="fingerprint_error">Cannot detect fingerprint, retry again</string>
-    <string name="registering">Please wait registering your device</string>
+    <string name="fingerprint_error">Cannot detect fingerprint.\n Retry again</string>
+    <string name="registering">Please wait.\n Registering your device</string>
     <string name="waiting_for_authorization">Waiting for authorization</string>
     <string name="not_registered">Device not registered</string>
     <string name="register">Register</string>
     <string name="alredy_registered">Registration failed.You have already registered with the
     sevice.Contact Support Team of WSO2 Telco</string>
     <string name="registration_error">Registration failed.Error in registration</string>
-    <string name="no_permission">No permission to for Telephony services</string>
+    <string name="no_permission">No permission for Telephony services</string>
     <string name="pushtoken_not_found">Push Token not found</string>
     <string name="try_pin">Try with PIN</string>
 

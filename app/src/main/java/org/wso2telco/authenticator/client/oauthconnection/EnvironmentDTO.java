@@ -24,6 +24,7 @@ public class EnvironmentDTO {
 
     public static String scope = "openid";
     public static String login_hint = "910773524111";
+    public static String serviceproviderURL = "https://drive.google.com/file/d/0B-_reM0CkulJV2tqSnpZTUhuZzQ/view?usp=sharing";
     private static String clientId = "b2IDaQ8FaVWUTg3a1O3dlt7ToB0a";
     private static String callbackUrl = "http://jenkins.wso2telco.com:9763/playground2/oauth2.jsp";
     private static String hostUrl1 = "https://sandbox.gateway.wso2telco.com";

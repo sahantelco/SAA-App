@@ -38,6 +38,7 @@ public class MySettings {
     private static final String ACTIVITYOAUTH = "False";
     private static int DEFAULT_DEVICE_REGISTRATION_STATUS = Registration.NOT_REGISTERED;
 
+
     public interface Authentication {
         public static String PIN = "PIN";
         public static String FINGER_PRINT = "FP";

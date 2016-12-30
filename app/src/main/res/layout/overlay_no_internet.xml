@@ -1,40 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_authentication"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/lightBlue">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/activity_authentication"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent">
 
-    <TextView
-        android:text="@string/no_internet"
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="120dp"
+        android:background="@android:color/transparent">
+
+        <ImageView
+            android:layout_width="500dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="19dp"
+            android:src="@drawable/home_mc"/>
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btnRetryInet"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
-        android:textColor="@android:color/white"
-        android:fontFamily="sans-serif-condensed"
-        android:textSize="16dp"/>
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        >
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/internet"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="220dp"
+            android:fontFamily="sans-serif-condensed"
+            android:text="@string/no_internet"
+            android:textColor="@android:color/white"
+            android:textSize="23dp"
+            />
+
+
+        <ImageView
+            android:layout_width="170dp"
+            android:layout_height="190dp"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="300dp"
+            android:src="@drawable/no_internet"/>
+
+
+    </RelativeLayout>
+
+    <Button
         android:id="@+id/btnRetryInet"
-        android:onClick="onClickRetryInet"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:text="Click to retry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/btnRetryInet"
-        android:textColor="@android:color/white"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
         android:layout_centerHorizontal="true"
-        android:fontFamily="sans-serif-condensed"
-        android:textSize="16dp"/>
-
+        android:layout_marginTop="500dp"
+        android:background="@color/buttonBlue"
+        android:gravity="center"
+        android:onClick="onClickRetryInet"
+        android:text="Click to retry"
+        android:textColor="@color/text_inverse"
+        android:textSize="18dp"
+        />
 </RelativeLayout>

@@ -1,3 +1,10 @@
+package org.wso2telco.authenticator.client.fingerprint;
+
+import android.annotation.TargetApi;
+import android.hardware.fingerprint.FingerprintManager;
+import android.os.Build;
+import android.os.CancellationSignal;
+
 /* ******************************************************************************************
  *
  * Copyright (c) 2016-2017, WSO2.Telco Inc. (http://wso2telco.com/) All Rights Reserved.
@@ -15,15 +22,8 @@
  * limitations under the License.
 ********************************************************************************************/
 
-package org.wso2telco.authenticator.client.fingerprint;
-
-import android.annotation.TargetApi;
-import android.hardware.fingerprint.FingerprintManager;
-import android.os.Build;
-import android.os.CancellationSignal;
-
 @TargetApi(Build.VERSION_CODES.M)
-public class FingerprintHelper extends FingerprintManager.AuthenticationCallback {
+public class AppFingerprintHelper extends FingerprintManager.AuthenticationCallback {
 
 
     private final FingerprintManager fingerPrintManager;
@@ -32,7 +32,7 @@ public class FingerprintHelper extends FingerprintManager.AuthenticationCallback
 
     private boolean mSelfCancelled;
 
-    public FingerprintHelper(FingerprintManager fingerprintManager, Callback callback) {
+    public AppFingerprintHelper(FingerprintManager fingerprintManager, Callback callback) {
         fingerPrintManager = fingerprintManager;
         callBack = callback;
     }
@@ -47,7 +47,7 @@ public class FingerprintHelper extends FingerprintManager.AuthenticationCallback
         if (!isFingerprintAuthAvailable()) {
             return;
         }
-       cancellationSignal = new CancellationSignal();
+        cancellationSignal = new CancellationSignal();
         mSelfCancelled = false;
         // noinspection ResourceType
         fingerPrintManager

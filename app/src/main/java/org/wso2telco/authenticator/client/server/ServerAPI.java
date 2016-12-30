@@ -46,11 +46,13 @@ public class ServerAPI {
     private static Context mCtx;
     private final String API_ERROR = "API Error";
     private final String NETWORK_ERROR = "Network Error";
-    //private String END_POINT = "http://10.10.12.38:9763/SAA_Authenticator_v1" +
-     //       ".0/services/serverAPI/";
-    private String END_POINT = "http://sandbox.mconnect.wso2telco.com/SAA_Authenticator_v1.0/services/serverAPI/";
+//    private String END_POINT = "http://10.10.12.38:9763/SAA_Authenticator_v1" +
+//           ".1/services/serverAPI/";
+    //private String END_POINT = "http://sandbox.mconnect.wso2telco.com/SAA_Authenticator_v1" +
+    ///        ".0/services/serverAPI/";
+    private String END_POINT = "http://192.168.8.102:9763/SAA_Authenticator_v1" +
+            ".2/services/serverAPI/";
     //private String END_POINT ="http://192.168.8.103:9763/SAA_Authenticator_v1.0/services/serverAPI/";
-
     private RequestQueue mRequestQueue;
     private ResponseListener responseListener;
 

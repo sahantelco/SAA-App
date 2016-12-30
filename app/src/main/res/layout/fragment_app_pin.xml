@@ -1,48 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/white"
-    android:orientation="vertical"
-    >
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:background="@drawable/subpage_background"
+              android:orientation="vertical"
+              android:weightSum="1">
+
+    <ImageView
+
+        android:src="@drawable/home_mc"
+        android:layout_gravity="center"
+        android:layout_width="500dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="19dp"/>
+
+    <TextView
+        android:id="@+id/text_security_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed"
+        android:text="@string/pin_enter_new"
+        android:textColor="@color/text_inverse"
+        android:textSize="23dp"
+        android:layout_marginTop="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        />
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/lightBlue"
         android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_weight="1.01"
+        android:layout_marginTop="10dp">
 
-        <TextView
-            android:id="@+id/text_security_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="16.0dip"
-            android:text="@string/pin_enter_new"
-            android:textAllCaps="true"
+        <Button
+            android:text="Cancel"
+            android:onClick="onCancelInstallation"
             android:textColor="@color/text_inverse"
-            android:fontFamily="sans-serif-condensed"
-            android:textSize="16dp" />
+            android:textSize="18dp"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:id="@+id/button2"
+            android:gravity="center"
+            android:background="@color/red"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="16dp"/>
 
         <TextView
+            android:layout_marginTop="-20dp"
             android:id="@+id/pin_display"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed"
             android:gravity="center|top"
             android:includeFontPadding="false"
             android:lines="1"
             android:maxLines="1"
             android:textColor="@color/text_inverse"
-            android:textSize="180.0sp"
-            android:fontFamily="sans-serif-condensed"
-            />
+            android:textSize="175.0sp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
+
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="bottom"
         android:orientation="vertical">
 
         <LinearLayout
@@ -54,17 +85,17 @@
             <Button
                 android:id="@+id/button_security_1"
                 style="@style/SecurityButton"
-                android:text="1" />
+                android:text="1"/>
 
             <Button
                 android:id="@+id/button_security_2"
                 style="@style/SecurityButton"
-                android:text="2" />
+                android:text="2"/>
 
             <Button
                 android:id="@+id/button_security_3"
                 style="@style/SecurityButton"
-                android:text="3" />
+                android:text="3"/>
         </LinearLayout>
 
         <LinearLayout
@@ -76,17 +107,17 @@
             <Button
                 android:id="@+id/button_security_4"
                 style="@style/SecurityButton"
-                android:text="4" />
+                android:text="4"/>
 
             <Button
                 android:id="@+id/button_security_5"
                 style="@style/SecurityButton"
-                android:text="5" />
+                android:text="5"/>
 
             <Button
                 android:id="@+id/button_security_6"
                 style="@style/SecurityButton"
-                android:text="6" />
+                android:text="6"/>
         </LinearLayout>
 
         <LinearLayout
@@ -98,17 +129,17 @@
             <Button
                 android:id="@+id/button_security_7"
                 style="@style/SecurityButton"
-                android:text="7" />
+                android:text="7"/>
 
             <Button
                 android:id="@+id/button_security_8"
                 style="@style/SecurityButton"
-                android:text="8" />
+                android:text="8"/>
 
             <Button
                 android:id="@+id/button_security_9"
                 style="@style/SecurityButton"
-                android:text="9" />
+                android:text="9"/>
         </LinearLayout>
 
         <LinearLayout
@@ -120,17 +151,17 @@
             <Button
                 android:id="@+id/button_security_clear"
                 style="@style/SecurityButton"
-                android:text="C" />
+                android:text="C"/>
 
             <Button
                 android:id="@+id/button_security_0"
                 style="@style/SecurityButton"
-                android:text="0" />
+                android:text="0"/>
 
             <Button
                 android:id="@+id/button_security_back"
                 style="@style/SecurityButton"
-                android:text="⇤" />
+                android:text="⇤"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

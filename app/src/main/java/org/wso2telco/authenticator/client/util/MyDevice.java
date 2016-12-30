@@ -176,21 +176,6 @@ public class MyDevice {
     }
 
     /**
-     * get msisdn from the application
-     *
-     * @param context
-     * @return msisdn
-     */
-    public static String getMsisdn(Context context) {
-
-        String msisdn = "";
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-            msisdn = getTelephonyManagerService(context).getLine1Number();
-        }
-        return msisdn;
-    }
-
-    /**
      * Check whether the Telephony Permissions are granted for the application
      *
      * @param activity

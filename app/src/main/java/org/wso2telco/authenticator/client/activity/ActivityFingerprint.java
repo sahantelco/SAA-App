@@ -27,6 +27,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import org.wso2telco.authenticator.client.R;
+import org.wso2telco.authenticator.client.fragment.AppFingerprintFragment;
 import org.wso2telco.authenticator.client.fragment.FingerprintFragment;
 import org.wso2telco.authenticator.client.util.MyDevice;
 
@@ -38,8 +39,9 @@ public class ActivityFingerprint extends FragmentActivity {
         setContentView(R.layout.activity_fingerprint);
         MyDevice.setTaskBarColored(this);
 
-        FingerprintFragment fingerprintFragment = (FingerprintFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_fingerprint);
-        fingerprintFragment.setFingerListener(new FingerprintFragment.FingerprintListener() {
+        AppFingerprintFragment fingerprintFragment = (AppFingerprintFragment)
+                getSupportFragmentManager().findFragmentById(R.id.fragment_fingerprint);
+        fingerprintFragment.setFingerListener(new AppFingerprintFragment.FingerprintListener() {
             @Override
             public void onChangeAuthenticationPin() {
                 returnToMain(FingerprintFragment.Return.SHOW_PIN);
