@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.TextView;
+
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
@@ -249,7 +251,8 @@ public class ActivityAuthorize extends FragmentActivity {
      * @param updateStatus to update the SAA Adapter
      */
     public void setAuthenticationStatus(int status, final String updateStatus) {
-        String strMSISDN = ServerAPI.MSISDN;
+        String strMSISDN = ServerAPI.getMSISDN();
+//        String strMSISDN = "911111111111";
         Log.d("msisdn at setAuthen", strMSISDN);
 
         //Calling SAA Server to update the transaction status as cancelled.
@@ -272,6 +275,9 @@ public class ActivityAuthorize extends FragmentActivity {
 //                        notifyUserAndGoBackground("Server Error");
 //                    }
 //                });
+                findViewById(R.id.overlay_transaction_success).setVisibility(View.VISIBLE);
+                findViewById(R.id.overlay_cancel_transaction).setVisibility(View.GONE);
+                notifyUserAndGoBackground("Authentication complete");
             }
 
             @Override
@@ -294,6 +300,7 @@ public class ActivityAuthorize extends FragmentActivity {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
+                        showMainActivity();
                         moveTaskToBack(true);
                     }
                 });
@@ -306,5 +313,10 @@ public class ActivityAuthorize extends FragmentActivity {
         });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    private void showMainActivity() {
+        Intent i = new Intent(this, ActivityMain.class);
+        startActivity(i);
     }
 }

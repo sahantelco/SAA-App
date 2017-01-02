@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="1"
-    android:background="@color/settingPage">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/settingPage"
+              android:orientation="vertical"
+              android:weightSum="1">
 
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/littledarkBlue"
+        android:orientation="horizontal"
         android:weightSum="1">
 
         <ImageView
             android:layout_width="30dp"
             android:layout_height="60dp"
-            android:src="@drawable/back_arrow"
-            android:gravity="right"
             android:layout_marginLeft="8dp"
+            android:gravity="right"
             android:onClick="onClickClose"
+            android:src="@drawable/back_arrow"
             />
 
         <TextView
-            android:text="Settings"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:gravity="center_vertical"
-            android:textSize="22sp"
-            android:textColor="@color/white"
-            android:fontFamily="sans-serif"
             android:layout_marginLeft="15dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center_vertical"
+            android:text="Settings"
+            android:textColor="@color/white"
+            android:textSize="22sp"
             />
 
     </LinearLayout>
@@ -40,59 +40,60 @@
 
     <LinearLayout
         android:id="@+id/appSetting"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/settingPage"
+        android:orientation="vertical"
         android:padding="10dp"
-        android:weightSum="1"
-        android:background="@color/settingPage">
+        android:weightSum="1">
 
         <TextView
             style="@style/actSettingsTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
             android:onClick="clickAppSettings"
             android:text="@string/application_setting"
-            android:fontFamily="sans-serif"
             android:textColor="@color/lightBlue"
             android:textSize="18sp">
         </TextView>
 
         <RadioGroup
+            android:id="@+id/opt_app"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
-            android:id="@+id/opt_app"
-            android:layout_marginTop="20dp"
             android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
             android:layout_weight="0.22">
 
             <RadioButton
-                android:text="Pin"
+                android:id="@+id/opt_app_pin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/opt_app_pin"
                 android:button="@drawable/custom_radio_button"
-                android:padding="10dp"
-                android:textSize="18sp"
                 android:fontFamily="sans-serif"
-                android:textColor="@color/darkGrey"/>
+                android:padding="10dp"
+                android:text="Pin"
+                android:textColor="@color/darkGrey"
+                android:textSize="18sp"/>
+
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
-                android:background="@color/grey"
-                android:layout_marginLeft="20dp"/>
+                android:layout_marginLeft="20dp"
+                android:background="@color/grey"/>
 
             <RadioButton
-                android:text="Fingerprint"
+                android:id="@+id/opt_app_fingerprint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/opt_app_fingerprint"
                 android:layout_weight="1"
                 android:button="@drawable/custom_radio_button"
-                android:padding="10dp"
-                android:textSize="18sp"
                 android:fontFamily="sans-serif"
-                android:textColor="@color/darkGrey"/>
+                android:padding="10dp"
+                android:text="Fingerprint"
+                android:textColor="@color/darkGrey"
+                android:textSize="18sp"/>
         </RadioGroup>
 
     </LinearLayout>
@@ -100,62 +101,62 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="2dp"
-        android:background="#959595" />
+        android:background="#959595"/>
 
     <LinearLayout
         android:id="@+id/transSetting"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:background="@color/settingPage">
+        android:background="@color/settingPage"
+        android:orientation="vertical"
+        android:padding="10dp">
 
         <TextView
             style="@style/actSettingsTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/transaction_setting"
             android:fontFamily="sans-serif"
+            android:text="@string/transaction_setting"
             android:textColor="@color/lightBlue"
             android:textSize="18sp"
             />
 
         <RadioGroup
+            android:id="@+id/opt_trans"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/opt_trans"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="20dp">
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp">
 
             <RadioButton
-                android:text="Pin"
+                android:id="@+id/opt_trans_pin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/opt_trans_pin"
                 android:layout_weight="1"
                 android:button="@drawable/custom_radio_button"
-                android:padding="10dp"
-                android:textSize="18sp"
                 android:fontFamily="sans-serif"
-                android:textColor="@color/darkGrey"/>
+                android:padding="10dp"
+                android:text="Pin"
+                android:textColor="@color/darkGrey"
+                android:textSize="18sp"/>
 
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
-                android:background="@drawable/setting_divide_bg"
-                android:layout_marginLeft="20dp"/>
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/setting_divide_bg"/>
 
             <RadioButton
-                android:text="Fingerprint"
+                android:id="@+id/opt_trans_fingerprint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/opt_trans_fingerprint"
                 android:layout_weight="1"
                 android:button="@drawable/custom_radio_button"
-                android:padding="10dp"
-                android:textSize="18sp"
                 android:fontFamily="sans-serif"
-                android:textColor="@color/darkGrey" />
+                android:padding="10dp"
+                android:text="Fingerprint"
+                android:textColor="@color/darkGrey"
+                android:textSize="18sp"/>
         </RadioGroup>
 
     </LinearLayout>
@@ -167,21 +168,21 @@
         android:background="@color/settingPage">
 
         <Button
-            android:text="Change Pin"
+            android:id="@+id/button"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="112dp"
+            android:background="@color/lightBlue"
+            android:fontFamily="sans-serif"
             android:gravity="center"
             android:onClick="onClickChangePin"
-            android:id="@+id/button"
-            android:background="@color/lightBlue"
-            android:textSize="18dp"
+            android:text="Change Pin"
             android:textAllCaps="true"
             android:textColor="@color/white"
-            android:fontFamily="sans-serif"
-            android:layout_marginLeft="112dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"/>
+            android:textSize="18dp"/>
 
     </RelativeLayout>
 </LinearLayout>

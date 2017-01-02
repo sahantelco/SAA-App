@@ -1,40 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="50dp"
-    android:background="@color/darkGrey"
-    android:orientation="horizontal">
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:background="@color/darkGrey"
+                android:orientation="horizontal">
+
     <TextView
-        android:text="Cancel the transaction"
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView"
-        android:textColor="@color/white"
-        android:paddingLeft="20dp"
-        android:paddingTop="15dp"
         android:layout_weight="1"
         android:fontFamily="sans-serif-condensed"
+        android:paddingLeft="20dp"
+        android:paddingTop="15dp"
+        android:text="Cancel the transaction"
+        android:textColor="@color/white"
         android:textSize="18dp"
         />
 
     <Button
-        android:text="Cancel"
+        android:id="@+id/btnCancel"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
-        android:id="@+id/btnCancel"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="17dp"
+        android:layout_marginRight="17dp"
         android:layout_weight="1"
-        android:onClick="onClickCancelTransaction"
         android:background="@color/red"
         android:fontFamily="sans-serif-condensed"
-        android:textColor="@color/white"
-        android:textSize="18dp"
+        android:onClick="onClickCancelTransaction"
+        android:text="Cancel"
         android:textAllCaps="false"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="17dp"
-        android:layout_marginEnd="17dp"/>
+        android:textColor="@color/white"
+        android:textSize="18dp"/>
 
 </RelativeLayout>
 

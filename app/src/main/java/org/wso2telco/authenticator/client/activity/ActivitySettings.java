@@ -19,15 +19,9 @@ package org.wso2telco.authenticator.client.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -77,6 +71,12 @@ public class ActivitySettings extends Activity {
         }
     }
 
+    private void showPinActivity(int mode, int returnType) {
+        Intent i = new Intent(this, ActivityPin.class);
+        i.putExtra(PinFragment.SECURITY_TYPE, mode);
+        startActivityForResult(i, returnType);
+    }
+
     private void showChangePinActivity() {
         Intent i = new Intent(ActivitySettings.this, ActivityPin.class);
         i.putExtra(PinFragment.SECURITY_TYPE, PinFragment.SECURITY_CHANGE_PIN);
@@ -120,6 +120,9 @@ public class ActivitySettings extends Activity {
 
             switch (checkedId) {
                 case R.id.opt_app_pin:
+                    if (!MySettings.isPinCodeSet(ActivitySettings.this)) {
+                        showPinActivity(PinFragment.SECURITY_TYPE_NEW_PIN, ActivityMain.Request.INITIAL_PIN_SETTING);
+                    }
                     MySettings.setAppAuthMode(ActivitySettings.this, MySettings.Authentication.PIN);
                     break;
                 case R.id.opt_app_fingerprint:

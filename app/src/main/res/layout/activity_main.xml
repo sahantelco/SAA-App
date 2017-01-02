@@ -1,19 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@drawable/subpage_background"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:background="@drawable/subpage_background"
+              android:orientation="vertical">
 
 
-    <include android:id="@+id/overlay_no_mobiledata" layout="@layout/overlay_no_mobiledata" android:visibility="gone" />
-    <include android:id="@+id/overlay_transaction_success" layout="@layout/overlay_transaction_success"
-             android:visibility="gone" />
-    <include android:id="@+id/overlay_no_sim" layout="@layout/overlay_no_sim" android:visibility="gone" />
-    <include android:id="@+id/overlay_no_internet" layout="@layout/overlay_no_internet" android:visibility="gone" />
-    <include android:id="@+id/overlay_device_registration" layout="@layout/overlay_device_registration" android:visibility="gone" />
-    <include android:id="@+id/overlay_no_sim_support_mc" layout="@layout/overlay_no_sim_support_mc" android:visibility="gone" />
+    <include
+        android:id="@+id/overlay_no_mobiledata"
+        layout="@layout/overlay_no_mobiledata"
+        android:visibility="gone"/>
+
+    <include
+        android:id="@+id/overlay_no_sim"
+        layout="@layout/overlay_no_sim"
+        android:visibility="gone"/>
+
+    <include
+        android:id="@+id/overlay_no_internet"
+        layout="@layout/overlay_no_internet"
+        android:visibility="gone"/>
+
+    <include
+        android:id="@+id/overlay_device_registration"
+        layout="@layout/overlay_device_registration"
+        android:visibility="gone"/>
+
+    <include
+        android:id="@+id/overlay_no_sim_support_mc"
+        layout="@layout/overlay_no_sim_support_mc"
+        android:visibility="gone"/>
+
+    <include
+        android:id="@+id/overlay_initial_app_settings"
+        layout="@layout/overlay_initial_app_settings"
+        android:visibility="gone"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -21,26 +43,26 @@
         android:background="@android:color/transparent">
 
         <ImageView
-            android:src="@drawable/mclogo_insidepage"
-            android:layout_gravity="left"
             android:layout_width="162dp"
             android:layout_height="85dp"
-            android:layout_marginLeft="18dp"
-            android:layout_marginStart="18dp"
-            android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="left"
+            android:layout_marginLeft="18dp"
+            android:layout_marginStart="18dp"
             android:layout_marginTop="19dp"
+            android:src="@drawable/mclogo_insidepage"
             />
 
         <ImageView
-            android:src="@drawable/sp_logo"
-            android:layout_gravity="right"
             android:layout_width="185dp"
             android:layout_height="85dp"
-            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"/>
+            android:layout_centerVertical="true"
+            android:layout_gravity="right"
+            android:src="@drawable/sp_logo"/>
 
     </RelativeLayout>
 
@@ -53,9 +75,9 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
             android:layout_alignParentStart="true"
             >
 
@@ -63,69 +85,69 @@
                 android:id="@+id/txtAwaitingAutherization"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="80dp"
-                android:fontFamily="sans-serif-condensed"
-                android:text="@string/waiting_for_authorization"
-                android:textColor="@android:color/white"
-                android:textSize="23dp"
-                android:orientation="vertical"
-                android:gravity="center_vertical|center_horizontal"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="80dp"
+                android:fontFamily="sans-serif-condensed"
+                android:gravity="center_vertical|center_horizontal"
+                android:maxLines="2"
+                android:orientation="vertical"
                 android:padding="5dp"
-                android:maxLines="2"/>
+                android:text="@string/waiting_for_authorization"
+                android:textColor="@android:color/white"
+                android:textSize="23dp"/>
 
             <ImageView
-                android:src="@drawable/waiting_image"
-                android:layout_gravity="center"
                 android:layout_width="170dp"
                 android:layout_height="190dp"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="155dp"/>
+                android:layout_gravity="center"
+                android:layout_marginTop="155dp"
+                android:src="@drawable/waiting_image"/>
 
         </RelativeLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:gravity="center"
             android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:orientation="horizontal"
             >
 
             <ImageButton
                 android:layout_width="71dp"
                 android:layout_height="61dp"
-                android:layout_gravity="bottom"
-                android:onClick="onClickSettings"
-                android:background="@drawable/setting_icon"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="20dp"/>
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/setting_icon"
+                android:onClick="onClickSettings"/>
 
             <ImageButton
                 android:layout_width="71dp"
                 android:layout_height="61dp"
-                android:layout_gravity="bottom"
-                android:onClick="onClickRecovery"
-                android:background="@drawable/recovery"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
+                android:layout_gravity="bottom"
                 android:layout_marginBottom="20dp"
+                android:background="@drawable/recovery"
+                android:onClick="onClickRecovery"
                 android:visibility="gone"/>
 
             <ImageButton
                 android:layout_width="71dp"
                 android:layout_height="61dp"
-                android:layout_gravity="bottom"
-                android:onClick="onClickInfo"
-                android:background="@drawable/info"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
+                android:layout_gravity="bottom"
                 android:layout_marginBottom="20dp"
+                android:background="@drawable/info"
+                android:onClick="onClickInfo"
                 android:visibility="gone"/>
 
         </LinearLayout>

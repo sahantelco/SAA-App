@@ -241,7 +241,7 @@ public class PinFragment extends Fragment {
         }
     }
 
-    private void insertPinDigit(int i){
+    private void insertPinDigit(int i) {
         int count = this.mPinEnteredCount + 1;
         this.mPinEnteredCount = count;
         if (count <= PIN_LENGTH) {

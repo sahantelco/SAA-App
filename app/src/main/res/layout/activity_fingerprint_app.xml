@@ -7,9 +7,9 @@
               android:orientation="vertical">
 
     <fragment
-        android:name="org.wso2telco.authenticator.client.fragment.AppFingerprintFragment"
         android:id="@+id/fragment_fingerprint"
+        android:name="org.wso2telco.authenticator.client.fragment.AppFingerprintFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

@@ -76,6 +76,7 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 public class ActivityMain extends Activity {
@@ -140,9 +141,13 @@ public class ActivityMain extends Activity {
     }
 
     private void init() throws JSONException {
-        if (!MySettings.isPinCodeSet(this))
-            showPinActivity(PinFragment.SECURITY_TYPE_NEW_PIN, Request.INITIAL_PIN_SETTING);
-            //uncomment later
+        if (!MySettings.isAppInstalled(this)) {
+            Log.d("app", "App installed");
+            showAppInstallActivity(VISIBLE);
+            MySettings.setAppInstalled(this, "installed");
+        }
+
+        //uncomment later
 //        else if (!MyDevice.hasSIM(this))
 //            showNoSim(View.VISIBLE);
 //        else if(!MyDevice.isSIMSupportMobileConnect(this))
@@ -189,20 +194,18 @@ public class ActivityMain extends Activity {
     }
 
     public void onClickRetrySIM(View v) throws JSONException {
-        if (MyDevice.hasSIM(this)){
+        if (MyDevice.hasSIM(this)) {
             showNoSim(View.GONE);
             init();
-        }
-        else
+        } else
             showToast(R.string.no_sim);
     }
 
     public void onClickRetrySIMmobileConnect(View v) throws JSONException {
-        if (MyDevice.isSIMSupportMobileConnect(this)){
+        if (MyDevice.isSIMSupportMobileConnect(this)) {
             showSimNotSupportMC(View.GONE);
             init();
-        }
-        else
+        } else
             showToast(R.string.no_sim_supportMC);
     }
 
@@ -243,6 +246,15 @@ public class ActivityMain extends Activity {
     }
 
     private void waitForAuthorization() {
+        findViewById(R.id.overlay_initial_app_settings).setVisibility(GONE);
+        Log.d("WaitforAuthorization", "Waitfor authorization");
+        //////////////
+        try {
+            init();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        //////////////////////
         TextView txtAwaiting = (TextView) findViewById(R.id.txtAwaitingAutherization);
 //        showImageSP(EnvironmentDTO.serviceproviderURL);
         blink(txtAwaiting);
@@ -286,6 +298,15 @@ public class ActivityMain extends Activity {
         startActivityForResult(i, returnType);
     }
 
+    private void showMainActivity() {
+        Intent i = new Intent(this, ActivityMain.class);
+        startActivity(i);
+    }
+
+    private void showAppInstallActivity(int visibility) {
+        findViewById(R.id.overlay_initial_app_settings).setVisibility(visibility);
+    }
+
     private void showSettingActivity() {
         Intent i = new Intent(this, ActivitySettings.class);
         startActivity(i);
@@ -309,13 +330,11 @@ public class ActivityMain extends Activity {
 
     private void showDeviceRegistration(int visibility) throws JSONException {
         findViewById(R.id.overlay_device_registration).setVisibility(visibility);
-        Log.d("call1","Calling first");
         if (VISIBLE == visibility)
             registerDeviceWithCheck();
     }
 
     public void onClickRetryRegistration(View v) throws JSONException {
-        Log.d("call2","Calling second");
         if (tvRegRetry.getVisibility() == VISIBLE) {
             tvRegStatus.setText(R.string.registering);
             blink(tvRegStatus);
@@ -323,8 +342,32 @@ public class ActivityMain extends Activity {
         }
     }
 
-    public void onCancelInstallation(){
-        finish();
+    public void onClickRegisterWithPin(View v) throws JSONException {
+        if (!MySettings.isPinCodeSet(this)) {
+            showPinActivity(PinFragment.SECURITY_TYPE_NEW_PIN, ActivityMain.Request.INITIAL_PIN_SETTING);
+        }
+    }
+
+    public void onClickRegisterWithFingerprint(View v) throws JSONException {
+        int deviceFingerprintStatus = MyDevice.fingerprintStatus(this);
+
+        if (deviceFingerprintStatus == MyDevice.FingerprintStatus.HARDWARE_SUPPORTED_AND_SET)
+            MySettings.setAppAuthMode(this, MySettings.Authentication.FINGER_PRINT);
+        else if (deviceFingerprintStatus == MyDevice.FingerprintStatus.HARDWARE_SUPPORTED_AND_NOT_SET)
+            Toast.makeText(this,
+                    getResources().getString(R.string.error_not_set_finger_print),
+                    Toast.LENGTH_LONG).show();
+        else if (deviceFingerprintStatus == MyDevice.FingerprintStatus.HARDWARE_NOT_SUPPORTED)
+            Toast.makeText(this,
+                    getResources().getString(R.string.error_not_supported_finger_print),
+                    Toast.LENGTH_LONG).show();
+
+        showMainActivity();
+    }
+
+
+    public void onCancelInstallation() {
+        //showMainActivity();
     }
 
     private void registerDeviceWithCheck() throws JSONException {
@@ -342,123 +385,84 @@ public class ActivityMain extends Activity {
         platform = MySettings.getDevicePlatform(this);
 
         if (MyDevice.isTelephonyPermissionGranted(this)) {
-               if (!pushToken.isEmpty()){
+            if (!pushToken.isEmpty()) {
 
-                   endpoint = getMyUrl();
-                   Log.d("EndPoint", endpoint);
-                   webView = (WebView) findViewById(R.id.webview01);
-                   tvRegStatus = (TextView) findViewById(R.id.txtRegistrationStatus);
-                   tvRegRetry = (Button) findViewById(R.id.btnRetryRegistration);
-                   tvLoading = (ImageView) findViewById(R.id.imageLoading);
-                   tvRegRetry.setVisibility(View.GONE);
-                   tvRegStatus.setText(R.string.registering);
-                   blink(tvRegStatus);
+                endpoint = getMyUrl();
+                Log.d("EndPoint", endpoint);
+                webView = (WebView) findViewById(R.id.webview01);
+                tvRegStatus = (TextView) findViewById(R.id.txtRegistrationStatus);
+                tvRegRetry = (Button) findViewById(R.id.btnRetryRegistration);
+                tvLoading = (ImageView) findViewById(R.id.imageLoading);
+                tvRegRetry.setVisibility(View.GONE);
+                tvRegStatus.setText(R.string.registering);
+                blink(tvRegStatus);
 
-                   webView.getSettings().setJavaScriptEnabled(true);
-                   webView.getSettings().setDomStorageEnabled(true);
-                   webView.setWebViewClient(new WebViewClient() {
+                webView.getSettings().setJavaScriptEnabled(true);
+                webView.getSettings().setDomStorageEnabled(true);
+                webView.setWebViewClient(new WebViewClient() {
 
-                       @SuppressWarnings("deprecation")
-                       public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                           view.setVisibility(View.GONE);
-                           try {
-                               view.setVisibility(View.GONE);
-                               Log.d("WebView URL", url);
-                               view.loadUrl(url);
+                    @SuppressWarnings("deprecation")
+                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                        view.setVisibility(View.GONE);
+                        try {
+                            view.setVisibility(View.GONE);
+                            Log.d("WebView URL", url);
+                            view.loadUrl(url);
 
-                               if (view.getUrl().contains("preprod/authenticationendpoint/login.do")&& view.getUrl().contains("authenticators=MSISDNAuthenticator:LOCAL")){
-                                   view.setVisibility(View.VISIBLE);
-                                   tvRegStatus.setVisibility(View.GONE);
-                                   tvRegRetry.setVisibility(View.GONE);
-                                   tvLoading.setVisibility(View.GONE);
-                               }
-                               else
-                               {
-                                   tvRegStatus.setVisibility(View.VISIBLE);
-                                   tvLoading.setVisibility(View.VISIBLE);
-                                   blink(tvRegStatus);
-                               }
+                            if (view.getUrl().contains("preprod/authenticationendpoint/login.do") && view.getUrl().contains("authenticators=MSISDNAuthenticator:LOCAL")) {
+                                view.setVisibility(View.VISIBLE);
+                                tvRegStatus.setVisibility(View.GONE);
+                                tvRegRetry.setVisibility(View.GONE);
+                                tvLoading.setVisibility(View.GONE);
+                            } else {
+                                tvRegStatus.setVisibility(View.VISIBLE);
+                                tvLoading.setVisibility(View.VISIBLE);
+                                blink(tvRegStatus);
+                            }
 
-                               if (view.getUrl().contains("playground2") && view.getUrl().contains("&code=")) {
+                            if (view.getUrl().contains("playground2") && view.getUrl().contains("&code=")) {
 
-                                   aouthCodeValue = getAouthCodeFromUrl(view.getUrl());
-                                   Log.d("Aouth Code value", aouthCodeValue);
+                                aouthCodeValue = getAouthCodeFromUrl(view.getUrl());
+                                Log.d("Aouth Code value", aouthCodeValue);
 
-                                   if(aouthCodeValue != null){
-                                       //Get the token code
-                                       TokenRequest tokenTask = new TokenRequest();
-                                       if (Build.VERSION.SDK_INT >= 11)
-                                           tokenTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                                       else
-                                           tokenTask.execute();
-                                   }
+                                if (aouthCodeValue != null) {
+                                    //Get the token code
+                                    TokenRequest tokenTask = new TokenRequest();
+                                    if (Build.VERSION.SDK_INT >= 11)
+                                        tokenTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                    else
+                                        tokenTask.execute();
+                                }
+                            } else
+                                return true;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return true;
+                    }
 
-//                                   if ( ServerAPI.TOKEN !=null){
-//                                       //Get the user MSISDN  from the UserInfo API
-//                                       UserInfoRequest userInfo = new UserInfoRequest();
-//                                       if (Build.VERSION.SDK_INT >= 11)
-//                                           userInfo.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//                                       else
-//                                           userInfo.execute();
-//                                   }
-//
-//                                   if( ServerAPI.MSISDN !=null)
-//                                       registerDevice(deviceId, pushToken, platform);
+                    @Override
+                    public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                        handler.proceed();
+                    }
 
-                               } else
-                                   return true;
-                           } catch (Exception e) {
-                               e.printStackTrace();
-                           }
-                           return true;
-                       }
+                });
 
-                       @Override
-                       public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                           handler.proceed();
-                       }
+                webView.clearCache(true);
+                webView.clearHistory();
+                webView.loadUrl(endpoint);
 
-                   });
-
-                   webView.clearCache(true);
-                   webView.clearHistory();
-                   webView.loadUrl(endpoint);
-
-
-//                   if(ServerAPI.TOKEN !=null) {
-//                       Log.d("token code", " not null");
-//                   }
-//                   else{
-//                       try {
-//                           registerDevice(deviceId, pushToken, platform);
-//                       } catch (JSONException e) {
-//                           e.printStackTrace();
-//                       }
-//                   }
-
-               }
-               else {
-                    tvRegStatus.clearAnimation();
-                    tvRegStatus.setText(R.string.pushtoken_not_found);
-                    tvRegRetry.setVisibility(VISIBLE);
-               }
+            } else {
+                tvRegStatus.clearAnimation();
+                tvRegStatus.setText(R.string.pushtoken_not_found);
+                tvRegRetry.setVisibility(VISIBLE);
+            }
         } else {
             tvRegStatus.clearAnimation();
             tvRegStatus.setText(R.string.no_permission);
-           // tvLoading.setImageResource(R.drawable.no_telephony_services);
+            // tvLoading.setImageResource(R.drawable.no_telephony_services);
             tvRegRetry.setVisibility(VISIBLE);
-       }
-//
-//        if(ServerAPI.TOKEN !=null) {
-//            Log.d("token code", " not null");
-//        }
-//        else{
-//            try {
-//                registerDevice(deviceId, pushToken, platform);
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        }
     }
 
     private void registerDevice(String deviceId, String pushToken, String platform)
@@ -534,7 +538,6 @@ public class ActivityMain extends Activity {
     private String getMyUrl() {
         String scope = EnvironmentDTO.scope;
         if (scope.contains("openid")) {
-            //String url = EnvironmentDTO.getOpenidEndpoint() + "&scope=" + scope +"&redirect_uri=" + EnvironmentDTO.getCallBackUrl() + "&client_id=" + EnvironmentDTO.getClientID();
             String url = EnvironmentDTO.getOpenidEndpoint();
             return url;
         }
@@ -604,10 +607,9 @@ public class ActivityMain extends Activity {
 
         protected void onPostExecute(String result) {
             Log.d("token code", tokenCodeValue);
-            ServerAPI.TOKEN = tokenCodeValue;
+            ServerAPI.setTOKEN(tokenCodeValue);
 
-            if(tokenCodeValue != null)
-            {
+            if (tokenCodeValue != null) {
                 UserInfoRequest userInfo = new UserInfoRequest();
                 if (Build.VERSION.SDK_INT >= 11)
                     userInfo.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -673,10 +675,11 @@ public class ActivityMain extends Activity {
         }
 
         protected void onPostExecute(String result) {
-            Log.d("MSISDN",userInfo);
-            ServerAPI.MSISDN = userInfo;
+            Log.d("MSISDN", userInfo);
+            ServerAPI.setMSISDN(userInfo);
+            Log.d("Inside MSISDN Token",ServerAPI.getTOKEN());
 
-            if(userInfo != null)
+            if (userInfo != null)
                 try {
                     registerDevice(deviceId, pushToken, platform);
                 } catch (JSONException e) {

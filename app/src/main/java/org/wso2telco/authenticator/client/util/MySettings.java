@@ -19,6 +19,7 @@ package org.wso2telco.authenticator.client.util;
 
 import android.content.SharedPreferences;
 import android.content.Context;
+import android.util.Log;
 
 public class MySettings {
 
@@ -26,6 +27,7 @@ public class MySettings {
     private static final String LOCALE = "LOCALE";
     private static final String DEVICE_CLIENT_ID = "CLIENT_DEVICE_ID";
     private static final String APP_PINCODE = "APP_PINCODE";
+    private static final String APP_INSTALLED = "APP_INSTALLED";
     private static final String APP_PINSALT = "APP_PINSALT";
     private static final String TRANS_AUTH_MODE = "TRANS_AUTH_MODE";
     private static final String APP_AUTH_MODE = "APP_AUTH_MODE";
@@ -36,7 +38,7 @@ public class MySettings {
     private static final String MSISDN = "MSISDN";
     private static final String PLATFORM = "Android";
     private static final String ACTIVITYOAUTH = "False";
-    private static int DEFAULT_DEVICE_REGISTRATION_STATUS = Registration.NOT_REGISTERED;
+    private static int DEFAULT_DEVICE_REGISTRATION_STATUS = Registration.REGISTERED;
 
 
     public interface Authentication {
@@ -114,6 +116,27 @@ public class MySettings {
     public static boolean isPinCodeSet(Context context) {
         String pinCode = getSharedPreferences(context).getString(APP_PINCODE, "");
         if (pinCode.isEmpty())
+            return false;
+        else
+            return true;
+    }
+
+    //getters and setters APP_INSTALLED
+    public static void setAppInstalled(Context context, String newValue) {
+        final SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putString(APP_INSTALLED, newValue);
+        editor.commit();
+        Log.d("set", "app installed");
+    }
+
+    public static String getAppInstalled(Context context) {
+        return getSharedPreferences(context).getString(APP_INSTALLED, "");
+    }
+
+    public static boolean isAppInstalled(Context context) {
+        String appInstalled = getSharedPreferences(context).getString(APP_INSTALLED, "");
+        Log.d("AppInstalled", appInstalled);
+        if (appInstalled.isEmpty())
             return false;
         else
             return true;

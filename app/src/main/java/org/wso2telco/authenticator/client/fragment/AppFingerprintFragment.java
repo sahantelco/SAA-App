@@ -18,24 +18,24 @@
 
 package org.wso2telco.authenticator.client.fragment;
 
-        import android.annotation.TargetApi;
-        import android.hardware.fingerprint.FingerprintManager;
-        import android.os.Build;
-        import android.os.Bundle;
-        import android.support.v4.app.Fragment;
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.view.animation.AlphaAnimation;
-        import android.view.animation.Animation;
-        import android.widget.Button;
-        import android.widget.LinearLayout;
-        import android.widget.RelativeLayout;
-        import android.widget.TextView;
+import android.annotation.TargetApi;
+import android.hardware.fingerprint.FingerprintManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 
-        import org.wso2telco.authenticator.client.R;
-        import org.wso2telco.authenticator.client.fingerprint.FingerprintHelper;
+import org.wso2telco.authenticator.client.R;
+import org.wso2telco.authenticator.client.fingerprint.FingerprintHelper;
 
 
 @TargetApi(Build.VERSION_CODES.M)

@@ -38,25 +38,25 @@ public class EnvironmentDTO {
 //        "afee-ccf7c865a25d";
 
     private static String openidEndpoint =
-            hostUrl1+"/authorize/v1/spark/oauth2/authorize?scope="+scope+"&response_type=code" +
-            "&redirect_uri="+callbackUrl+"&client_id="+clientId+
+            hostUrl1 + "/authorize/v1/spark/oauth2/authorize?scope=" + scope + "&response_type=code" +
+                    "&redirect_uri=" + callbackUrl + "&client_id=" + clientId +
                     "&acr_values=2&state=stateNjgwZjRhMzdlO&nonce=nonceOWFlMTE5NjUyN";
 
     private static String authorizationUrl = "Bearer " +
             "YjJJRGFROEZhVldVVGczYTFPM2RsdDdUb0IwYTpLX0N1d0ZCbnJXVm1YX0F0YlBjcm5mazJrbVVh";
-    private static String userInfoEndpoint = hostUrl2+"/oauth2/userinfo?schema=openid";
+    private static String userInfoEndpoint = hostUrl2 + "/oauth2/userinfo?schema=openid";
     private static String tokenRequestEndpoint =
-            hostUrl2+"/oauth2/token?redirect_uri="+callbackUrl+"&grant_type=authorization_code" +
+            hostUrl2 + "/oauth2/token?redirect_uri=" + callbackUrl + "&grant_type=authorization_code" +
                     "&code=";
     private static String updatestatusUrl =
-            hostUrl2+"/SessionUpdater/tnspoints/endpoint/saa/status";
+            hostUrl2 + "/SessionUpdater/tnspoints/endpoint/saa/status";
 
     public static String getOpenidEndpoint() {
-            return openidEndpoint;
+        return openidEndpoint;
     }
 
     public static String getOautherizationHeaderValue() {
-            return authorizationUrl;
+        return authorizationUrl;
     }
 
     public static String getupdatestatusUrl() {
@@ -64,10 +64,10 @@ public class EnvironmentDTO {
     }
 
     public static String getTokenEndpoint() {
-            return tokenRequestEndpoint;
+        return tokenRequestEndpoint;
     }
 
     public static String getUserInfoEndpoint() {
-            return userInfoEndpoint;
+        return userInfoEndpoint;
     }
 }

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/home_background"
+                android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="120dp"
+        android:background="@android:color/transparent">
+
+        <ImageView
+            android:layout_width="500dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="19dp"
+            android:src="@drawable/home_mc"/>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btnIntialAppPin"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="400dp"
+        android:background="@color/buttonBlue"
+        android:gravity="center"
+        android:onClick="onClickRegisterWithPin"
+        android:text="Pin"
+        android:textColor="@color/text_inverse"
+        android:textSize="18dp"
+        />
+
+    <Button
+        android:id="@+id/btnIntialAppFingerprint"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="470dp"
+        android:background="@color/pink"
+        android:gravity="center"
+        android:onClick="onClickRegisterWithFingerprint"
+        android:text="Fingerprint"
+        android:textColor="@color/text_inverse"
+        android:textSize="18dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/btnIntialAppPin"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="73dp"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center_vertical|center_horizontal"
+        android:maxLines="2"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:text="@string/initial_message"
+        android:textColor="@android:color/white"
+        android:textSize="20dp"/>
+
+</RelativeLayout>

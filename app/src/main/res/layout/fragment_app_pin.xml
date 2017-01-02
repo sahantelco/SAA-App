@@ -10,62 +10,62 @@
 
     <ImageView
 
-        android:src="@drawable/home_mc"
-        android:layout_gravity="center"
         android:layout_width="500dp"
         android:layout_height="100dp"
-        android:layout_marginTop="19dp"/>
+        android:layout_gravity="center"
+        android:layout_marginTop="19dp"
+        android:src="@drawable/home_mc"/>
 
     <TextView
         android:id="@+id/text_security_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
         android:fontFamily="sans-serif-condensed"
         android:text="@string/pin_enter_new"
         android:textColor="@color/text_inverse"
         android:textSize="23dp"
-        android:layout_marginTop="50dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
         />
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
+        android:layout_marginTop="10dp"
         android:layout_weight="1.01"
-        android:layout_marginTop="10dp">
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
         <Button
-            android:text="Cancel"
-            android:onClick="onCancelInstallation"
-            android:textColor="@color/text_inverse"
-            android:textSize="18dp"
+            android:id="@+id/cancelAppAuthorization"
             android:layout_width="300dp"
             android:layout_height="50dp"
-            android:id="@+id/button2"
-            android:gravity="center"
-            android:background="@color/red"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp"
+            android:background="@color/red"
+            android:gravity="center"
+            android:onClick="onCancelInstallation"
+            android:text="Cancel"
+            android:textColor="@color/text_inverse"
+            android:textSize="18dp"/>
 
         <TextView
-            android:layout_marginTop="-20dp"
             android:id="@+id/pin_display"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="-20dp"
             android:fontFamily="sans-serif-condensed"
             android:gravity="center|top"
             android:includeFontPadding="false"
             android:lines="1"
             android:maxLines="1"
             android:textColor="@color/text_inverse"
-            android:textSize="175.0sp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"/>
+            android:textSize="175.0sp"/>
 
     </RelativeLayout>
 

@@ -4,7 +4,7 @@
                 android:id="@+id/activity_authentication"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@android:color/transparent" >
+                android:background="@android:color/transparent">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -12,17 +12,17 @@
         android:background="@android:color/transparent">
 
         <ImageView
-            android:src="@drawable/home_mc"
-            android:layout_gravity="center"
             android:layout_width="500dp"
             android:layout_height="120dp"
-            android:layout_marginTop="19dp"/>
+            android:layout_gravity="center"
+            android:layout_marginTop="19dp"
+            android:src="@drawable/home_mc"/>
     </RelativeLayout>
 
     <WebView
         android:id="@+id/webview01"
-        android:layout_height="fill_parent"
         android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:visibility="gone"
         >
     </WebView>
@@ -30,9 +30,9 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
         >
 
@@ -40,42 +40,42 @@
             android:id="@+id/txtRegistrationStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="210dp"
-            android:fontFamily="sans-serif-condensed"
-            android:text="@string/registering"
-            android:textColor="@android:color/white"
-            android:textSize="23dp"
-            android:orientation="vertical"
-            android:gravity="center_vertical|center_horizontal"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="210dp"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center_vertical|center_horizontal"
+            android:maxLines="2"
+            android:orientation="vertical"
             android:padding="5dp"
-            android:maxLines="2"/>
+            android:text="@string/registering"
+            android:textColor="@android:color/white"
+            android:textSize="23dp"/>
 
         <ImageView
             android:id="@+id/imageLoading"
-            android:src="@drawable/waiting_image"
-            android:layout_gravity="center"
             android:layout_width="170dp"
             android:layout_height="190dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="300dp"/>
+            android:layout_gravity="center"
+            android:layout_marginTop="300dp"
+            android:src="@drawable/waiting_image"/>
 
 
     </RelativeLayout>
 
     <Button
-        android:text="Click to retry"
-        android:onClick="onClickRetryRegistration"
-        android:textColor="@color/text_inverse"
-        android:textSize="18dp"
+        android:id="@+id/btnRetryRegistration"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:gravity="center"
-        android:background="@color/buttonBlue"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="500dp"
-        android:id="@+id/btnRetryRegistration"
+        android:background="@color/buttonBlue"
+        android:gravity="center"
+        android:onClick="onClickRetryRegistration"
+        android:text="Click to retry"
+        android:textColor="@color/text_inverse"
+        android:textSize="18dp"
         />
 
 </RelativeLayout>

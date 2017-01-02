@@ -8,10 +8,10 @@
                 android:background="@android:color/transparent">
 
     <RelativeLayout
+        android:id="@+id/fingerprintLogoLayout"
         android:layout_width="wrap_content"
         android:layout_height="120dp"
-        android:background="@android:color/transparent"
-        android:id="@+id/fingerprintLogoLayout">
+        android:background="@android:color/transparent">
 
         <ImageView
             android:id="@+id/fingerprintMclogo"
@@ -59,10 +59,10 @@
             android:id="@+id/fingerprintsettings"
             android:layout_width="wrap_content"
             android:layout_height="200dp"
-            android:gravity="center"
             android:layout_alignTop="@+id/fingerprint_icon"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="170dp"
+            android:gravity="center"
             android:visibility="gone">
 
 
@@ -70,26 +70,26 @@
                 android:id="@+id/txtFingerprintError"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:text="@string/fingerprint_error"
-                android:textColor="@color/warning_color"
-                android:lines="2"
-                android:textSize="18dp"
+                android:layout_centerHorizontal="true"
                 android:layout_margin="50dp"
                 android:gravity="center"
-                android:layout_centerHorizontal="true"/>
+                android:lines="2"
+                android:text="@string/fingerprint_error"
+                android:textColor="@color/warning_color"
+                android:textSize="18dp"/>
 
             <Button
                 android:id="@+id/btnPasswordAuthentication"
                 android:layout_width="300dp"
                 android:layout_height="50dp"
                 android:layout_centerHorizontal="true"
+                android:layout_margin="120dp"
                 android:background="@color/buttonBlue"
                 android:gravity="center"
+                android:paddingTop="5dp"
                 android:text="@string/try_pin"
                 android:textColor="@color/text_inverse"
                 android:textSize="18dp"
-                android:layout_margin="120dp"
-                android:paddingTop="5dp"
                 />
 
         </RelativeLayout>

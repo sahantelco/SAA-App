@@ -40,19 +40,22 @@ import java.util.Map;
 
 public class ServerAPI {
 
-    public static String TOKEN;
-    public static String MSISDN;
+    private static String TOKEN;
+    private static String MSISDN;
     private static ServerAPI mInstance;
     private static Context mCtx;
     private final String API_ERROR = "API Error";
     private final String NETWORK_ERROR = "Network Error";
-//    private String END_POINT = "http://10.10.12.38:9763/SAA_Authenticator_v1" +
-//           ".1/services/serverAPI/";
-    //private String END_POINT = "http://sandbox.mconnect.wso2telco.com/SAA_Authenticator_v1" +
-    ///        ".0/services/serverAPI/";
-    private String END_POINT = "http://192.168.8.102:9763/SAA_Authenticator_v1" +
-            ".2/services/serverAPI/";
-    //private String END_POINT ="http://192.168.8.103:9763/SAA_Authenticator_v1.0/services/serverAPI/";
+    //    private String END_POINT = "http://10.10.12.38:9763/SAA_Authenticator_v1" +
+    //           ".1/services/serverAPI/";
+        //private String END_POINT = "http://sandbox.mconnect.wso2telco.com/SAA_Authenticator_v1" +
+        ///        ".0/services/serverAPI/";
+    //    private String END_POINT = "http://192.168.8.102:9763/SAA_Authenticator_v1" +
+    //            ".2/services/serverAPI/";
+        // private String END_POINT = "http://127.0.0.1:9763/SAA_Authenticator_v1.3/services/serverAPI/";
+
+    private String END_POINT = "http://10.10.12.38:9763/SAA_Authenticator_v1.0/services/serverAPI/";
+
     private RequestQueue mRequestQueue;
     private ResponseListener responseListener;
 
@@ -63,6 +66,22 @@ public class ServerAPI {
     public ServerAPI(Context context) {
         mCtx = context;
         mRequestQueue = getRequestQueue();
+    }
+
+    public static String getTOKEN() {
+        return TOKEN;
+    }
+
+    public static void setTOKEN(String TOKEN) {
+        ServerAPI.TOKEN = TOKEN;
+    }
+
+    public static String getMSISDN() {
+        return MSISDN;
+    }
+
+    public static void setMSISDN(String MSISDN) {
+        ServerAPI.MSISDN = MSISDN;
     }
 
     public static synchronized ServerAPI getInstance(Context context) {
@@ -78,6 +97,8 @@ public class ServerAPI {
         }
         return mRequestQueue;
     }
+
+
 
     public <T> void addToRequestQueue(Request<T> req) {
         getRequestQueue().add(req);

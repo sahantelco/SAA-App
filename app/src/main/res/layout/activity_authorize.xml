@@ -8,83 +8,101 @@
               android:orientation="vertical"
               android:weightSum="1">
 
-    <include android:id="@+id/overlay_cancel_transaction" layout="@layout/overlay_cancel_transaction"
-             android:layout_weight="0.02"/>
+    <include
+        android:id="@+id/overlay_cancel_transaction"
+        layout="@layout/overlay_cancel_transaction"
+        android:layout_weight="0.02"/>
+
+    <include
+        android:id="@+id/overlay_transaction_success"
+        layout="@layout/overlay_transaction_success"
+        android:visibility="gone"/>
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="272dp"
         android:layout_gravity="center"
         android:background="@android:color/transparent"
+        android:orientation="vertical"
         >
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="85dp"
-            android:background="@android:color/transparent"
-            android:layout_marginLeft="10dp">
+            android:layout_marginLeft="10dp"
+            android:background="@android:color/transparent">
 
             <ImageView
-                android:src="@drawable/mclogo_insidepage"
-                android:layout_gravity="left"
                 android:layout_width="162dp"
                 android:layout_height="85dp"
-                android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_marginTop="5dp"/>
+                android:layout_alignParentTop="true"
+                android:layout_gravity="left"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/mclogo_insidepage"/>
 
             <ImageView
-                android:src="@drawable/sp_logo"
-                android:layout_gravity="right"
                 android:layout_width="185dp"
                 android:layout_height="85dp"
-                android:background="@android:color/transparent"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="5dp"/>
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="right"
+                android:layout_marginTop="5dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/sp_logo"/>
 
         </RelativeLayout>
 
         <TextView
-            android:text="eZCash"
+            android:id="@+id/txtSP"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/txtSP"
-            android:textColor="@color/white"
             android:layout_gravity="center_horizontal"
             android:fontFamily="sans-serif-condensed"
-            android:textSize="18dp"
             android:padding="10dp"
+            android:text="eZCash"
+            android:textColor="@color/white"
+            android:textSize="18dp"
             />
 
         <ImageView
+            android:id="@+id/imgSP"
             android:layout_width="200dp"
             android:layout_height="60dp"
             android:layout_gravity="center_horizontal"
-            android:id="@+id/imgSP"
             android:layout_marginTop="15dp"
-            android:scaleType="fitXY"
-            android:background="@android:color/transparent"/>
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"/>
 
         <TextView
-            android:text="Operator message"
+            android:id="@+id/txtMessage"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:id="@+id/txtMessage"
             android:layout_gravity="center_horizontal"
-            android:textColor="@android:color/white"
             android:layout_marginTop="20dp"
             android:fontFamily="sans-serif-condensed"
-            android:textSize="18dp"
             android:paddingTop="5dp"
+            android:text="Operator message"
+            android:textColor="@android:color/white"
+            android:textSize="18dp"
             />
     </LinearLayout>
 
-    <include android:id="@+id/authSwipe" layout="@layout/overlay_swipe" android:visibility="gone" />
-    <include android:id="@+id/authPin" layout="@layout/overlay_pin" android:visibility="gone" />
-    <include android:id="@+id/authFingerprint" layout="@layout/overlay_fingerprint" android:visibility="gone" />
+    <include
+        android:id="@+id/authSwipe"
+        layout="@layout/overlay_swipe"
+        android:visibility="gone"/>
+
+    <include
+        android:id="@+id/authPin"
+        layout="@layout/overlay_pin"
+        android:visibility="gone"/>
+
+    <include
+        android:id="@+id/authFingerprint"
+        layout="@layout/overlay_fingerprint"
+        android:visibility="gone"/>
 
 </LinearLayout>

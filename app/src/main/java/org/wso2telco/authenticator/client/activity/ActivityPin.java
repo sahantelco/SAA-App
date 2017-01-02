@@ -33,7 +33,6 @@ import org.wso2telco.authenticator.client.R;
 import org.wso2telco.authenticator.client.fragment.PinFragment;
 import org.wso2telco.authenticator.client.util.MyDevice;
 
-
 public class ActivityPin extends FragmentActivity {
 
     protected void onCreate(Bundle bundle) {
