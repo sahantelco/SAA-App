@@ -23,12 +23,15 @@ package org.wso2telco.authenticator.client.oauthconnection;
 public class EnvironmentDTO {
 
     public static String scope = "openid";
-    public static String login_hint = "910773524111";
     public static String serviceproviderURL = "https://drive.google.com/file/d/0B-_reM0CkulJV2tqSnpZTUhuZzQ/view?usp=sharing";
     private static String clientId = "b2IDaQ8FaVWUTg3a1O3dlt7ToB0a";
     private static String callbackUrl = "http://jenkins.wso2telco.com:9763/playground2/oauth2.jsp";
     private static String hostUrl1 = "https://sandbox.gateway.wso2telco.com";
     private static String hostUrl2 = "https://sandbox.mconnect.wso2telco.com";
+
+    //headerEnrichViaNetwork = true if the header Enrichment happens by the network itself.
+    private static boolean headerEnrichViaNetwork = true;
+    private static String msisdn = "911111111112";
 
 //    private static String openidEndpoint =
 //        hostUrl1+"/authorizemnv/v1/spark/oauth2/authorize?nonce=565qwe&state=123\n" +
@@ -69,5 +72,17 @@ public class EnvironmentDTO {
 
     public static String getUserInfoEndpoint() {
         return userInfoEndpoint;
+    }
+
+    public static String getServiceproviderURL() {
+        return serviceproviderURL;
+    }
+
+    public static boolean isHeaderEnrichViaNetwork() {
+        return headerEnrichViaNetwork;
+    }
+
+    public static String getMsisdn() {
+        return msisdn;
     }
 }

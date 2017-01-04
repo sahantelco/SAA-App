@@ -252,7 +252,6 @@ public class ActivityAuthorize extends FragmentActivity {
      */
     public void setAuthenticationStatus(int status, final String updateStatus) {
         String strMSISDN = ServerAPI.getMSISDN();
-//        String strMSISDN = "911111111111";
         Log.d("msisdn at setAuthen", strMSISDN);
 
         //Calling SAA Server to update the transaction status as cancelled.

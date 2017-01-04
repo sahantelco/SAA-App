@@ -29,6 +29,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,6 +40,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -107,6 +109,14 @@ public class ActivityMain extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MultiDex.install(this);
+
+        //////////////////////////////////
+        DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();
+        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        Log.d("DpHeight",Float.toString(dpHeight));
+        Log.d("DpWidth",Float.toString(dpWidth));
+        //////////////////////////////////
         setContentView(R.layout.activity_main);
         try {
             init();
@@ -146,11 +156,9 @@ public class ActivityMain extends Activity {
             showAppInstallActivity(VISIBLE);
             MySettings.setAppInstalled(this, "installed");
         }
-
-        //uncomment later
 //        else if (!MyDevice.hasSIM(this))
 //            showNoSim(View.VISIBLE);
-//        else if(!MyDevice.isSIMSupportMobileConnect(this))
+//        else if (!MyDevice.isSIMSupportMobileConnect(this))
 //            showSimNotSupportMC(View.VISIBLE);
         else if (MySettings.getDeviceRegistrationStatus(this) == MySettings.Registration.NOT_REGISTERED) {
             if (!MyDevice.isInternetConnectedAndByDataNetwork(this))
@@ -248,13 +256,6 @@ public class ActivityMain extends Activity {
     private void waitForAuthorization() {
         findViewById(R.id.overlay_initial_app_settings).setVisibility(GONE);
         Log.d("WaitforAuthorization", "Waitfor authorization");
-        //////////////
-        try {
-            init();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        //////////////////////
         TextView txtAwaiting = (TextView) findViewById(R.id.txtAwaitingAutherization);
 //        showImageSP(EnvironmentDTO.serviceproviderURL);
         blink(txtAwaiting);
@@ -305,6 +306,33 @@ public class ActivityMain extends Activity {
 
     private void showAppInstallActivity(int visibility) {
         findViewById(R.id.overlay_initial_app_settings).setVisibility(visibility);
+//        TextView overlay_initial_app_settings_textview = (TextView) findViewById(R.id.overlay_initial_app_settings_textview);
+//        overlay_initial_app_settings_textview.setTextSize(20 * getResources().getDisplayMetrics()
+//                .density);
+////        TextView overlay_initial_app_settings_textview = (TextView) findViewById(R.id.overlay_initial_app_settings_textview);
+//        overlay_initial_app_settings_textview.setTextSize(20 * getResources().getDisplayMetrics()
+//                .density);
+//
+//        Button btnIntialAppPin = (Button) findViewById(R.id
+//                .btnIntialAppPin);
+//        btnIntialAppPin.setTextSize(20 * getResources().getDisplayMetrics()
+//                .density);
+//
+//        Button btnIntialAppFingerprint = (Button) findViewById(R.id
+//                .btnIntialAppFingerprint);
+//        btnIntialAppFingerprint.setTextSize(20 * getResources().getDisplayMetrics()
+//                .density);
+
+//        Button btnIntialAppPin = (Button) findViewById(R.id
+//                .btnIntialAppPin);
+//        btnIntialAppPin.setTextSize(20 * getResources().getDisplayMetrics()
+//                .density);
+//
+//        Button btnIntialAppFingerprint = (Button) findViewById(R.id
+//                .btnIntialAppFingerprint);
+//        btnIntialAppFingerprint.setTextSize(20 * getResources().getDisplayMetrics()
+//                .density);
+
     }
 
     private void showSettingActivity() {
@@ -409,7 +437,11 @@ public class ActivityMain extends Activity {
                             Log.d("WebView URL", url);
                             view.loadUrl(url);
 
-                            if (view.getUrl().contains("preprod/authenticationendpoint/login.do") && view.getUrl().contains("authenticators=MSISDNAuthenticator:LOCAL")) {
+                            //if (view.getUrl().contains("preprod/authenticationendpoint/login" +
+                            // ".do") && view.getUrl().contains
+                            // ("authenticators=MSISDNAuthenticator:LOCAL"))
+
+                            if (view.getUrl().contains("sandbox.mconnect.wso2telco.com/dashboard/register.jag") && view.getUrl().contains("sp=admin_gsmaapp")) {
                                 view.setVisibility(View.VISIBLE);
                                 tvRegStatus.setVisibility(View.GONE);
                                 tvRegRetry.setVisibility(View.GONE);
@@ -539,6 +571,8 @@ public class ActivityMain extends Activity {
         String scope = EnvironmentDTO.scope;
         if (scope.contains("openid")) {
             String url = EnvironmentDTO.getOpenidEndpoint();
+            if (EnvironmentDTO.isHeaderEnrichViaNetwork() == false)
+                url = url.concat("&msisdn=" + EnvironmentDTO.getMsisdn());
             return url;
         }
         return null;
@@ -677,7 +711,7 @@ public class ActivityMain extends Activity {
         protected void onPostExecute(String result) {
             Log.d("MSISDN", userInfo);
             ServerAPI.setMSISDN(userInfo);
-            Log.d("Inside MSISDN Token",ServerAPI.getTOKEN());
+            Log.d("Inside MSISDN Token", ServerAPI.getTOKEN());
 
             if (userInfo != null)
                 try {
